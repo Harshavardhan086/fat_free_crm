@@ -45,6 +45,7 @@ class Lead < ActiveRecord::Base
   has_one :business_address, -> { where "address_type='Business'" }, dependent: :destroy, as: :addressable, class_name: "Address"
   has_many :addresses, dependent: :destroy, as: :addressable, class_name: "Address" # advanced search uses this
   has_many :emails, as: :mediator
+  has_many :orders
 
   serialize :subscribed_users, Set
 
@@ -169,6 +170,13 @@ class Lead < ActiveRecord::Base
     end
   end
   alias_method :name, :full_name
+
+
+  def self.create_for_order(params)
+    lead = Lead.new(params)
+    lead.save
+    lead
+  end
 
   private
 

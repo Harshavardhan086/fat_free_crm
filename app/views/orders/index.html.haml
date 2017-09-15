@@ -1,0 +1,19 @@
+This is the orders index page.
+= styles_for :lead
+
+= render 'entities/title_bar'
+
+.remote#create_order{ hidden }
+
+= render 'search'
+
+.remote#options{ hidden }
+
+.list#orders
+  - if @orders.any?
+    = render @orders
+  - else
+    = render "shared/empty"
+
+#paginate= render "shared/paginate_with_per_page"
+#export= render "shared/export"

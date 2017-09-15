@@ -1,0 +1,6 @@
+= section(object, :orders)
+.list#orders
+  - orders = object.orders.paginate(:page => 1, :per_page => 20)
+  = render :partial => "orders/order", :collection => object.orders.paginate(:page => 1, :per_page => 20)
+
+= paginate( collection: leads, id: 'orders_pagination', params: { action: 'orders' } )

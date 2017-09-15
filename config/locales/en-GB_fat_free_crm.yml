@@ -55,6 +55,10 @@ en-GB:
   web: Website
   word_of_mouth: Word of Mouth
   other: Other
+  submitted_to_state: Submitted to State
+  received_from_state: Received from State
+  paid: Paid
+  cancelled: Cancelled
   prospecting: Prospecting
   analysis: Analysis
   presentation: Presentation
@@ -466,6 +470,12 @@ en-GB:
   show_status_info_small: Show status information for this lead.
   show_contact_info_small: Show contact information for this lead.
 
+
+  # views -> Order
+  #----------------------------------------------------------------------------
+  create_order: Create Order
+
+
   # Views -> Opportunities.
   #----------------------------------------------------------------------------
   amount: Amount
@@ -642,6 +652,7 @@ en-GB:
   collapse_all: Collapse all
   expanded: Expanded
   collapsed: Collapsed
+  select_state: State
 
   # Views -> Layout.
   #----------------------------------------------------------------------------

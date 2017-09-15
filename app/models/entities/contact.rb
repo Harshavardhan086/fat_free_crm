@@ -39,6 +39,7 @@
 class Contact < ActiveRecord::Base
   belongs_to :user
   belongs_to :lead
+  belongs_to :order
   belongs_to :assignee, class_name: "User", foreign_key: :assigned_to
   belongs_to :reporting_user, class_name: "User", foreign_key: :reports_to
   has_one :account_contact, dependent: :destroy
@@ -191,6 +192,11 @@ class Contact < ActiveRecord::Base
       contact.opportunities << opportunity unless opportunity.id.blank? # must happen after contact is saved
     end
     contact
+  end
+
+
+  def self.create_for_order(model)
+
   end
 
   private

@@ -1,0 +1,9 @@
+%li.highlight[order]
+  - if order.status
+    .strip{:class => order.status}= t order.status
+  - else
+    .strip{:style => "color: gray;"}= t :other
+
+
+
+

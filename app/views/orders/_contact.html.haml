@@ -1,0 +1,7 @@
+=fields_for (@contact) do |c|
+
+  .section
+    %table
+      %tr
+        .label.top #{t :blog}:
+        = c.text_field :blog

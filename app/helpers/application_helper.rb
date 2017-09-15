@@ -43,6 +43,12 @@ module ApplicationHelper
                 ), class: "subtitle")
   end
 
+
+  def subtitle_orders(id, hidden = true, text = id.to_s.split("_").last.capitalize)
+    content_tag("div",
+                " #{sanitize text}".html_safe, class: "subtitle")
+  end
+
   #----------------------------------------------------------------------------
   def section(related, assets)
     asset = assets.to_s.singularize

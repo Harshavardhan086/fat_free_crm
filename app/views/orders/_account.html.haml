@@ -1,0 +1,11 @@
+= fields_for(@account) do |a|
+  = a.hidden_field :user_id
+  -#= a.hidden_field :assigned_to
+
+
+  = error_messages_for :account, :opportunity, :object_name => t('lead')
+
+  .section
+    %table
+      %tr
+        %td= account_select_or_create(a)

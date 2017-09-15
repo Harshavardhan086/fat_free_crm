@@ -107,6 +107,20 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :orders, id: /\d+/ do
+    collection do
+      get :advanced_search
+      post :filter
+      get :options
+      get :field_group
+      match :auto_complete, via: [:get, :post]
+      get :redraw
+      get :versions
+    end
+    member do
+    end
+  end
+
   resources :opportunities, id: /\d+/ do
     collection do
       get :advanced_search

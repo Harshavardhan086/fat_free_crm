@@ -1,0 +1,33 @@
+= fields_for(@lead) do |l|
+  = l.hidden_field :user_id
+
+  -#.subtitle #{t :opportunity}
+  .section
+    %small
+      -##{t(:create_opp_for_contact)}
+    %table
+      %tr
+        %td
+          .label.top{ :class => "#{Setting.require_first_names ? 'req' : nil}" } #{t :first_name}:
+          = l.text_field :first_name, :autofocus => true
+        %td= spacer
+        %td
+          .label.top{ :class => "#{Setting.require_last_names ? 'req' : nil}" } #{t :last_name}:
+          = l.text_field :last_name
+      %tr
+        %td
+          .label #{t :email}:
+          = l.text_field :email
+        %td= spacer
+        %td
+          .label #{t :phone}:
+          = l.text_field :phone
+
+      - if Setting.background_info && Setting.background_info.include?(:lead)
+        %tr
+          %td(colspan="3")
+            .label= t(:background_info) << ':'
+            = l.text_area :background_info, :style =>"width:500px", :rows => 3
+
+    .label #{t :source}:
+    = l.select :source, Setting.unroll(:lead_source), { :selected => (@lead.source || "other").to_sym }, { :style => "width:160px" }

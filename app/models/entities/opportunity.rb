@@ -165,6 +165,18 @@ class Opportunity < ActiveRecord::Base
     opportunity
   end
 
+  def self.create_for_order(account, params)
+    opportunity = Opportunity.new(params)
+
+    # Save the opportunity if its name was specified and account has no errors.
+    if opportunity.name? && account.errors.empty?
+      # Note: opportunity.account = account doesn't seem to work here.
+      opportunity.account_opportunity = AccountOpportunity.new(account: account, opportunity: opportunity) unless account.id.blank?
+      opportunity.save
+      opportunity
+    end
+  end
+
   private
 
   # Make sure at least one user has been selected if the contact is being shared.

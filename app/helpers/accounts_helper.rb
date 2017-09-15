@@ -40,10 +40,10 @@ module AccountsHelper
     options = {}
     yield options if block_given?
 
-    content_tag(:div, class: 'label') do
+    content_tag(:div, class: 'label req') do
       t(:account).html_safe +
 
-        content_tag(:span, id: 'account_create_title') do
+        content_tag(:span, id: 'account_create_title', style: "display: none;") do
           "(#{t :create_new} #{t :or} <a href='#' onclick='crm.select_account(); return false;'>#{t :select_existing}</a>):".html_safe
         end +
 
@@ -51,7 +51,7 @@ module AccountsHelper
           "(<a href='#' onclick='crm.create_account(); return false;'>#{t :create_new}</a> #{t :or} #{t :select_existing}):".html_safe
         end +
 
-        content_tag(:span, ':', id: 'account_disabled_title')
+        content_tag(:span, ':', id: 'account_disabled_title', style: "display: none;")
     end +
 
       account_select(options) +

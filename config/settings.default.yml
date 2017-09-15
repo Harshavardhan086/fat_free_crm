@@ -203,6 +203,11 @@
   :url:
     :controller: home
 - :active: false
+  :text: :tab_order
+  :icon: :fa-users
+  :url:
+    :controller: orders
+- :active: false
   :text: :tab_tasks
   :icon: :fa-check-square-o
   :url:
@@ -337,6 +342,16 @@ lead_source:
   - :web
   - :word_of_mouth
   - :other
+
+
+# Order Status.
+#------------------------------------------------------------------------------
+order_status:
+  - :new
+  - :submitted_to_state
+  - :received_from_state
+  - :paid
+  - :cancelled
 
 # Opportunity Stage.
 #------------------------------------------------------------------------------

@@ -26,6 +26,7 @@ en-US:
   tab_contacts: Contacts
   tab_opportunities: Opportunities
   tab_team: Team
+  tab_order: Orders
   admin_tab_groups: Groups
   admin_tab_users: Users
   admin_tab_fields: Custom Fields
@@ -55,6 +56,10 @@ en-US:
   web: Website
   word_of_mouth: Word of Mouth
   other: Other
+  submitted_to_state: Submitted to State
+  received_from_state: Received from State
+  paid: Paid
+  cancelled: Cancelled
   prospecting: Prospecting
   analysis: Analysis
   presentation: Presentation
@@ -466,6 +471,13 @@ en-US:
   show_status_info_small: Show status information for this lead.
   show_contact_info_small: Show contact information for this lead.
 
+
+  #Views -> Orders
+  #----------------------------------------------------------------------------
+  order_small: order
+  create_order: Create Order
+  state_of_incorporate: State of Incorporate
+
   # Views -> Opportunities.
   #----------------------------------------------------------------------------
   amount: Amount
@@ -642,6 +654,7 @@ en-US:
   collapse_all: Collapse all
   expanded: Expanded
   collapsed: Collapsed
+  select_state: State
 
   # Views -> Layout.
   #----------------------------------------------------------------------------

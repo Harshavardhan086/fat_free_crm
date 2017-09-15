@@ -126,6 +126,20 @@ class Account < ActiveRecord::Base
     account
   end
 
+
+  def self.account_create_for_order(params)
+    Rails.logger.debug("account Model account_create_for_order-------******")
+    if params[:id].present?
+      Rails.logger.debug("ID IS PRESENT***********")
+      account = Account.find(params[:id])
+    else
+      Rails.logger.debug("ID not PRESENT----CREATING NEW ACCOUNT")
+      account = Account.new(params)
+      account.save
+    end
+    account
+  end
+
   private
 
   # Make sure at least one user has been selected if the account is being shared.
