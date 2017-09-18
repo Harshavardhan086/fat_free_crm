@@ -4,6 +4,20 @@
   - else
     .strip{:style => "color: gray;"}= t :other
 
+  %ul.tools
+    - if can?(:update, order)
+      %li= link_to_edit(order)
 
+  .indent
+    = link_to_if can?(:read, order), order.full_name(current_user.preference[:leads_naming]), order
+    -#%tt
+    -#  - if lead.company? && lead.title?
+    -#    = t(:works_at, :job_title => lead.title, :company => lead.company)
+    -#  - else
+    -#    = lead.company if lead.company?
+    -#    = lead.title if lead.title?
+    -#  - if lead.referred_by?
+    -#    &ndash;
+    -#    == #{t :referred_by_small} #{lead.referred_by}
 
-
+    -#= hook(:lead_bottom, self, :lead => lead)

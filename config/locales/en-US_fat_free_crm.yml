@@ -583,6 +583,7 @@ en-US:
   subject_contact: contact
   subject_email: email on
   subject_lead: lead
+  subject_order: order
   subject_opportunity: opportunity
   subject_task: task
   subject_user: user

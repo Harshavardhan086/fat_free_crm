@@ -78,7 +78,7 @@ class Opportunity < ActiveRecord::Base
   has_ransackable_associations %w(account contacts tags campaign activities emails comments)
   ransack_can_autocomplete
 
-  validates_presence_of :name, message: :missing_opportunity_name
+  # validates_presence_of :name, message: :missing_opportunity_name
   validates_numericality_of [:probability, :amount, :discount], allow_nil: true
   validate :users_for_shared_access
   validates :stage, inclusion: { in: proc { Setting.unroll(:opportunity_stage).map { |s| s.last.to_s } } }, allow_blank: true
@@ -166,15 +166,20 @@ class Opportunity < ActiveRecord::Base
   end
 
   def self.create_for_order(account, params)
-    opportunity = Opportunity.new(params)
+    Rails.logger.debug("opportunity model------ #{params.inspect}")
+    # "user_id"=>"1", "stage"=>"prospecting", "amount"=>"10000", "discount"=>"381"
+    opportunity = Opportunity.new
 
     # Save the opportunity if its name was specified and account has no errors.
-    if opportunity.name? && account.errors.empty?
+    # if opportunity.name? && account.errors.empty?
       # Note: opportunity.account = account doesn't seem to work here.
-      opportunity.account_opportunity = AccountOpportunity.new(account: account, opportunity: opportunity) unless account.id.blank?
-      opportunity.save
-      opportunity
-    end
+    opportunity.user_id = params[:user_id]
+    opportunity.stage = params[:stage]
+    opportunity.amount = params[:amount]
+    opportunity.discount = params[:discount]
+    opportunity.save
+    opportunity
+    # end
   end
 
   private

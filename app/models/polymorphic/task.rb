@@ -204,6 +204,20 @@ class Task < ActiveRecord::Base
     end
   end
 
+
+  def self.create_for_order(params, order)
+    task = Task.new
+    Rails.logger.debug("task model-------create_for_order----")
+    task.name = params[:name]
+    task.user_id = params[:user_id]
+    task.assigned_to = params[:assigned_to]
+    task.bucket = params[:bucket]
+    task.due_at = params[:calendar]
+    task.category = params[:category]
+    task.order_id = order.id
+    task.save
+  end
+
   private
 
   #----------------------------------------------------------------------------

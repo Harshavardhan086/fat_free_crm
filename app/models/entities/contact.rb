@@ -196,7 +196,13 @@ class Contact < ActiveRecord::Base
 
 
   def self.create_for_order(model)
-
+    contact = Contact.new
+    contact.first_name = model.first_name
+    contact.last_name = model.last_name
+    contact.phone = model.phone
+    contact.email = model.email
+    contact.save
+    contact
   end
 
   private

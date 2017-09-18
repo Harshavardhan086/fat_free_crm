@@ -8,7 +8,7 @@ class OrdersController < EntitiesController
     @account = Account.new(user: current_user, access: "Lead")
     @contact = Contact.new
     @us_states = us_states
-    @task = Task.new
+    @task = Task.new(user: current_user)
     @bucket = Setting.unroll(:task_bucket)[1..-1] << [t(:due_specific_date, default: 'On Specific Date...'), :specific_time]
     @category = Setting.unroll(:task_category)
   end
@@ -19,12 +19,20 @@ class OrdersController < EntitiesController
     logger.debug("OrdersController- create *********************- OPPORTUNITY:  #{params[:opportunity].inspect}")
     logger.debug("OrdersController- create *********************- Task: #{params[:task].inspect}")
 
-    @account, @opportunity, @contact = @order.order_attributes(params.permit!)
+    @account, @opportunity, @contact, @lead = @order.order_attributes(params.permit!)
+    logger.debug("Saved Lead---- #{@lead.id}")
+    logger.debug("Saved opportunity---- #{@opportunity.inspect}")
+    logger.debug("Saved account---- #{@account.inspect}")
+    logger.debug("Saved contact---- #{@contact.inspect}")
     order = Order.new
     order.user_id = params[:order][:user_id]
     order.status = params[:order][:status]
     order.state_of_incorporate = params[:order][:state_of_incorporate]
-    # order.save
+    order.lead_id = @lead.id
+    order.opportunity_id = @opportunity.id
+    order.save
+
+    Task.create_for_order(params[:task],order)
 
 
 

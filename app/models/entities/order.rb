@@ -28,7 +28,17 @@ class Order < ActiveRecord::Base
     lead = Lead.create_for_order(lead_params)
     contact = Contact.create_for_order(lead)
 
+    [account, opportunity, contact, lead]
+  end
 
+
+  def full_name(format = nil)
+    lead = Lead.find(self.lead_id)
+    if format.nil? || format == "before"
+      "#{lead.first_name} #{lead.last_name}"
+    else
+      "#{lead.last_name}, #{lead.first_name}"
+    end
   end
 
 end

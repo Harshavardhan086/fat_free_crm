@@ -1,5 +1,6 @@
 = subtitle_orders :order_task, t(:task)
 = fields_for(@task) do |task|
+  = task.hidden_field :user_id
   .section
     %table
       %tr
