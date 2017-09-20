@@ -2,7 +2,9 @@ class Order < ActiveRecord::Base
   belongs_to :user
   belongs_to :lead
   belongs_to :opportunity
+  belongs_to :account
   has_many :contacts
+
 
   uses_user_permissions
   acts_as_commentable
@@ -19,6 +21,7 @@ class Order < ActiveRecord::Base
     account_params = params[:account] ? params[:account] : {}
     opportunity_params = params[:opportunity] ? params[:opportunity] : {}
     lead_params = params[:lead] ? params[:lead] : {}
+    contact_params = params[:contact] ? params[:contact] : {}
     Rails.logger.debug("account_params----------- #{account_params.inspect}")
     Rails.logger.debug("opportunity_params--------- #{opportunity_params.inspect}")
     Rails.logger.debug("lead_params----------------#{lead_params.inspect}")
@@ -26,6 +29,7 @@ class Order < ActiveRecord::Base
     account = Account.account_create_for_order(account_params)
     opportunity = Opportunity.create_for_order(account, opportunity_params)
     lead = Lead.create_for_order(lead_params)
+    Rails.logger.debug("The SAVED LEAD IS ************* #{lead.inspect}")
     contact = Contact.create_for_order(lead)
 
     [account, opportunity, contact, lead]

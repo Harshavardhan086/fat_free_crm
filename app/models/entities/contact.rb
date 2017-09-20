@@ -87,7 +87,7 @@ class Contact < ActiveRecord::Base
   acts_as_commentable
   uses_comment_extensions
   acts_as_taggable_on :tags
-  has_paper_trail class_name: 'Version', ignore: [:subscribed_users]
+  # has_paper_trail class_name: 'Version', ignore: [:subscribed_users]
 
   has_fields
   exportable
@@ -195,12 +195,14 @@ class Contact < ActiveRecord::Base
   end
 
 
-  def self.create_for_order(model)
+  def self.create_for_order(lead)
     contact = Contact.new
-    contact.first_name = model.first_name
-    contact.last_name = model.last_name
-    contact.phone = model.phone
-    contact.email = model.email
+    contact.lead_id = lead.id
+    contact.first_name = lead.first_name
+    contact.last_name = lead.last_name
+    contact.phone = lead.phone
+    contact.email = lead.email
+    contact.blog = lead.blog
     contact.save
     contact
   end

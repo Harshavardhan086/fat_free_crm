@@ -37,6 +37,7 @@ class Account < ActiveRecord::Base
   has_one :shipping_address, -> { where(address_type: "Shipping") }, dependent: :destroy, as: :addressable, class_name: "Address"
   has_many :addresses, dependent: :destroy, as: :addressable, class_name: "Address" # advanced search uses this
   has_many :emails, as: :mediator
+  has_many :orders
 
   serialize :subscribed_users, Set
 
@@ -62,7 +63,7 @@ class Account < ActiveRecord::Base
   acts_as_commentable
   uses_comment_extensions
   acts_as_taggable_on :tags
-  has_paper_trail class_name: 'Version', ignore: [:subscribed_users]
+  # has_paper_trail class_name: 'Version', ignore: [:subscribed_users]
   has_fields
   exportable
   sortable by: ["name ASC", "rating DESC", "created_at DESC", "updated_at DESC"], default: "created_at DESC"

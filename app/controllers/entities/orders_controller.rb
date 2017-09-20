@@ -1,12 +1,12 @@
 class OrdersController < EntitiesController
   # before_action :get_data_for_sidebar, only: :index
+
   def new
     # @order = Order.new(user: current_user)
     @order.attributes = { user: current_user }
     @lead = Lead.new(user: current_user)
     @opportunity = Opportunity.new(user: current_user, access: "Lead", stage: "prospecting")
     @account = Account.new(user: current_user, access: "Lead")
-    @contact = Contact.new
     @us_states = us_states
     @task = Task.new(user: current_user)
     @bucket = Setting.unroll(:task_bucket)[1..-1] << [t(:due_specific_date, default: 'On Specific Date...'), :specific_time]
@@ -18,26 +18,30 @@ class OrdersController < EntitiesController
     logger.debug("OrdersController- create *********************- ACCOUNT:  #{params[:account].inspect}")
     logger.debug("OrdersController- create *********************- OPPORTUNITY:  #{params[:opportunity].inspect}")
     logger.debug("OrdersController- create *********************- Task: #{params[:task].inspect}")
-
+    logger.debug("OrdersController- create *********************- ORDER Is: #{@order.inspect}")
     @account, @opportunity, @contact, @lead = @order.order_attributes(params.permit!)
     logger.debug("Saved Lead---- #{@lead.id}")
     logger.debug("Saved opportunity---- #{@opportunity.inspect}")
     logger.debug("Saved account---- #{@account.inspect}")
     logger.debug("Saved contact---- #{@contact.inspect}")
-    order = Order.new
-    order.user_id = params[:order][:user_id]
-    order.status = params[:order][:status]
-    order.state_of_incorporate = params[:order][:state_of_incorporate]
-    order.lead_id = @lead.id
-    order.opportunity_id = @opportunity.id
-    order.save
+    @order.user_id = params[:order][:user_id]
+    @order.status = params[:order][:status]
+    @order.state_of_incorporate = params[:order][:state_of_incorporate]
+    @order.lead_id = @lead.id
+    @order.opportunity_id = @opportunity.id
+    @order.account_id = @account.id
+    @order.save
 
-    Task.create_for_order(params[:task],order)
+    Task.create_for_order(params[:task],@order)
 
-
-
+    respond_with(@order) do |_format|
+      if called_from_index_page?
+        @orders = get_orders
+      end
+    end
   end
-  # GET /leads
+
+  # GET /orders
   #----------------------------------------------------------------------------
   def index
     @orders = get_orders(page: params[:page])
@@ -49,6 +53,24 @@ class OrdersController < EntitiesController
     end
   end
 
+
+  def edit
+    @account = @order.account || Account.new(user: current_user)
+    @lead = @order.lead
+    @opportunity = @order.opportunity
+    @us_states = us_states
+
+    if params[:previous].to_s =~ /(\d+)\z/
+      @previous = Lead.my.find_by_id(Regexp.last_match[1]) || Regexp.last_match[1].to_i
+    end
+
+    respond_with(@order)
+  end
+
+  def update
+    logger.debug("Orders Controller- update****************** : #{params.inspect}")
+
+  end
   # GET /orders/redraw                                                   AJAX
   #----------------------------------------------------------------------------
   def redraw

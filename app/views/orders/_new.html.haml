@@ -16,7 +16,6 @@
           = f.select :state_of_incorporate, @us_states , {:selected => (@order.state_of_incorporate || ""), :include_blank => true}, { :style => "width:160px" }
   = render "account"
 
-  = render "contact"
   = render "opportunity"
   = render "task"
 

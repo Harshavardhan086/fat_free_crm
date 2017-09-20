@@ -28,6 +28,12 @@
           %td(colspan="3")
             .label= t(:background_info) << ':'
             = l.text_area :background_info, :style =>"width:500px", :rows => 3
-
-    .label #{t :source}:
-    = l.select :source, Setting.unroll(:lead_source), { :selected => (@lead.source || "other").to_sym }, { :style => "width:160px" }
+    %table
+      %tr
+        %td
+          .label.top #{t :blog}:
+          = l.text_field :blog
+        %td= spacer
+        %td
+          .label #{t :source}:
+          = l.select :source, Setting.unroll(:lead_source), { :selected => (@lead.source || "other").to_sym }, { :style => "width:160px" }
