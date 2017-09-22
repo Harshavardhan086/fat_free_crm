@@ -1,0 +1,20 @@
+- if (template = template_for_current_view)
+  = render(template, :order => @order)
+- else
+
+  -# default view
+
+  = styles_for :task
+
+  = render 'orders/title_bar', :order => @order
+
+  = render "comments/new", :commentable => @order
+  = render :partial => "shared/timeline", :collection => @timeline
+
+  = hook(:show_order_bottom, self, {entity: @order}) do
+
+    = render :partial => "tasks/tasks", :locals => {:object => @order}
+
+    = render :partial => "versions/versions", :locals => {:object => @order}
+
+    = load_select_popups_for(@order, :tasks)

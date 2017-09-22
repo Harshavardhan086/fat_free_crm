@@ -118,6 +118,9 @@ Rails.application.routes.draw do
       get :versions
     end
     member do
+      post :discard
+      post :subscribe
+      post :unsubscribe
     end
   end
 

@@ -4,7 +4,10 @@ class Order < ActiveRecord::Base
   belongs_to :opportunity
   belongs_to :account
   has_many :contacts
+  has_many :emails, as: :mediator
+  has_many :tasks, as: :asset, dependent: :destroy # , :order => 'created_at DESC'
 
+  serialize :subscribed_users, Set
 
   uses_user_permissions
   acts_as_commentable
@@ -15,6 +18,8 @@ class Order < ActiveRecord::Base
   exportable
   sortable by: [ "created_at DESC", "updated_at DESC"], default: "created_at DESC"
 
+  has_ransackable_associations %w(lead)
+  ransack_can_autocomplete
 
 
   def order_attributes(params)

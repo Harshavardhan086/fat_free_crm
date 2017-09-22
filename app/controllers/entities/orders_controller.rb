@@ -4,9 +4,9 @@ class OrdersController < EntitiesController
   def new
     # @order = Order.new(user: current_user)
     @order.attributes = { user: current_user }
-    @lead = Lead.new(user: current_user)
-    @opportunity = Opportunity.new(user: current_user, access: "Lead", stage: "prospecting")
-    @account = Account.new(user: current_user, access: "Lead")
+    @lead = Lead.new(user: current_user,access: Setting.default_access)
+    @opportunity = Opportunity.new(user: current_user)
+    @account = Account.new(user: current_user)
     @us_states = us_states
     @task = Task.new(user: current_user)
     @bucket = Setting.unroll(:task_bucket)[1..-1] << [t(:due_specific_date, default: 'On Specific Date...'), :specific_time]
@@ -69,8 +69,27 @@ class OrdersController < EntitiesController
 
   def update
     logger.debug("Orders Controller- update****************** : #{params.inspect}")
+    logger.debug("Orders controller- update******** Lead : #{params[:lead].inspect}")
+    # logger.debug("Orders controller- update******** opportunity : #{params[:opportunity].inspect}")
+    lead = @order.lead
+    logger.debug("ORDER LEAD IS : #{lead.inspect}")
+    opportunity = @order.opportunity
+    lead.update(params[:lead])
+    # lead.save
+    # opportunity.update_attributes(params[:opportunity])
+    logger.debug("Before Orders update*******")
+    if @order.update_attributes(orders_params)
+      respond_with(@order)
+    end
 
   end
+
+  def show
+    @comment = Comment.new
+    @timeline = timeline(@order)
+    respond_with(@order)
+  end
+
   # GET /orders/redraw                                                   AJAX
   #----------------------------------------------------------------------------
   def redraw
@@ -146,5 +165,10 @@ class OrdersController < EntitiesController
 
   alias_method :get_orders, :get_list_of_records
 
-
+  def orders_params
+    params.require(:order).permit(:user_id, :status, :state_of_incorporate,
+                                  leads_attribute: [:user_id, :first_name, :last_name, :email, :phone, :blog, :source],
+                                  opportunities_attribute: [:user_id, :stage, :amount, :discount]
+    )
+  end
 end

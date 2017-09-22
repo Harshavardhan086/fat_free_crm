@@ -206,6 +206,7 @@ class Task < ActiveRecord::Base
 
 
   def self.create_for_order(params, order)
+
     task = Task.new
     Rails.logger.debug("task model-------create_for_order----")
     task.name = params[:name]
@@ -215,6 +216,8 @@ class Task < ActiveRecord::Base
     task.due_at = params[:calendar]
     task.category = params[:category]
     task.order_id = order.id
+    task.asset_id = order.id
+    task.asset_type = order.class.name
     task.save
   end
 
