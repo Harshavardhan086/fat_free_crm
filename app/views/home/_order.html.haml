@@ -1,0 +1,15 @@
+%li.highlight[order]
+  - if order.status
+    .strip{:class => order.status}= t(order.status)
+  - else
+    .strip.white #{t :other}
+
+  .indent
+    = link_to(h(order.full_name(current_user.preference[:leads_naming])), order)
+    %tt
+      &ndash;
+      - user_name = order.user.try(:full_name)
+      - if user_name
+        = t(:added_by, :time_ago => timeago(order.created_at), :user => h(user_name)).html_safe
+      - else
+        = t(:added_ago, :value => timeago(order.created_at)).html_safe

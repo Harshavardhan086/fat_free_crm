@@ -165,11 +165,13 @@ class Opportunity < ActiveRecord::Base
     opportunity
   end
 
-  def self.create_for_order(account, params)
+  def self.create_for_order(account, params, task)
     Rails.logger.debug("opportunity model------ #{params.inspect}")
-    # "user_id"=>"1", "stage"=>"prospecting", "amount"=>"10000", "discount"=>"381"
-    opportunity = Opportunity.new
-
+    if params[:id].present?
+      opportunity = Opportunity.find(params[:id])
+    else
+      opportunity = Opportunity.new
+    end
     # Save the opportunity if its name was specified and account has no errors.
     # if opportunity.name? && account.errors.empty?
       # Note: opportunity.account = account doesn't seem to work here.
@@ -177,6 +179,7 @@ class Opportunity < ActiveRecord::Base
     opportunity.stage = params[:stage]
     opportunity.amount = params[:amount]
     opportunity.discount = params[:discount]
+    opportunity.assigned_to = task[:assigned_to]
     opportunity.save
     opportunity
     # end

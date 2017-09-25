@@ -9,6 +9,13 @@ class Order < ActiveRecord::Base
 
   serialize :subscribed_users, Set
 
+  # Show orders which either belong to the user and are unassigned, or are assigned to the user
+  scope :visible_on_dashboard, ->(user) {
+    where('user_id = :user_id ', user_id: user.id)
+  }
+
+  scope :by_created_at, -> { order("created_at DESC") }
+
   uses_user_permissions
   acts_as_commentable
   uses_comment_extensions
@@ -27,12 +34,13 @@ class Order < ActiveRecord::Base
     opportunity_params = params[:opportunity] ? params[:opportunity] : {}
     lead_params = params[:lead] ? params[:lead] : {}
     contact_params = params[:contact] ? params[:contact] : {}
+    task_params = params[:task] ? params[:task] : {}
     Rails.logger.debug("account_params----------- #{account_params.inspect}")
     Rails.logger.debug("opportunity_params--------- #{opportunity_params.inspect}")
     Rails.logger.debug("lead_params----------------#{lead_params.inspect}")
 
     account = Account.account_create_for_order(account_params)
-    opportunity = Opportunity.create_for_order(account, opportunity_params)
+    opportunity = Opportunity.create_for_order(account, opportunity_params, task_params)
     lead = Lead.create_for_order(lead_params)
     Rails.logger.debug("The SAVED LEAD IS ************* #{lead.inspect}")
     contact = Contact.create_for_order(lead)
@@ -50,4 +58,5 @@ class Order < ActiveRecord::Base
     end
   end
 
+  ActiveSupport.run_load_hooks(:fat_free_crm_order, self)
 end

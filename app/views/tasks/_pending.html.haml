@@ -18,7 +18,7 @@
       = auto_link h(pending.name)
       - if pending.asset_id?
         =t :related
-        = link_to(h(pending.asset.name), polymorphic_url(pending.asset))
+        = link_to(h(pending.asset.full_name(current_user.preference[:leads_naming])), polymorphic_url(pending.asset))
       &ndash;
     %tt
       - if pending.bucket == "due_asap"

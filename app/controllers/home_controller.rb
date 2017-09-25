@@ -10,8 +10,10 @@ class HomeController < ApplicationController
   #----------------------------------------------------------------------------
   def index
     @activities = get_activities
+    # logger.debug("home_controller-index------ @activities === #{@activities}")
     @my_tasks = Task.visible_on_dashboard(current_user).includes(:user, :asset).by_due_at
     @my_opportunities = Opportunity.visible_on_dashboard(current_user).includes(:account, :user, :tags).by_closes_on.by_amount
+    @my_orders = Order.visible_on_dashboard(current_user).by_created_at
     @my_accounts = Account.visible_on_dashboard(current_user).includes(:user, :tags).by_name
     respond_with(@activities)
   end
@@ -92,6 +94,7 @@ class HomeController < ApplicationController
 
   #----------------------------------------------------------------------------
   def get_activities(options = {})
+    # logger.debug("home_controller- get_activities************ #{options.inspect}")
     options[:asset]    ||= activity_asset
     options[:event]    ||= activity_event
     options[:user]     ||= activity_user

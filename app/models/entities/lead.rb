@@ -65,7 +65,7 @@ class Lead < ActiveRecord::Base
   acts_as_commentable
   uses_comment_extensions
   acts_as_taggable_on :tags
-  # has_paper_trail class_name: 'Version', ignore: [:subscribed_users]
+  has_paper_trail class_name: 'Version', ignore: [:subscribed_users]
   has_fields
   exportable
   sortable by: ["first_name ASC", "last_name ASC", "company ASC", "rating DESC", "created_at DESC", "updated_at DESC"], default: "created_at DESC"
@@ -113,10 +113,13 @@ class Lead < ActiveRecord::Base
   # Update lead attributes taking care of campaign lead counters when necessary.
   #----------------------------------------------------------------------------
   def update_with_lead_counters(attributes)
+    Rails.logger.debug("lead model ---------- update_with_lead_counter**************** #{attributes.inspect}")
     if campaign_id == attributes[:campaign_id] # Same campaign (if any).
+      Rails.logger.debug("inside the IF statement------")
       self.attributes = attributes
       save
     else                                            # Campaign has been changed -- update lead counters...
+      Rails.logger.debug("inside the else statement------")
       decrement_leads_count                         # ..for the old campaign...
       self.attributes = attributes                  # Assign new campaign.
       lead = save
@@ -173,7 +176,18 @@ class Lead < ActiveRecord::Base
 
 
   def self.create_for_order(params)
-    lead = Lead.new(params)
+    if params[:id].present?
+      lead = Lead.find(params[:id])
+    else
+      lead = Lead.new
+    end
+    lead.user_id = params[:user_id]
+    lead.first_name = params[:first_name]
+    lead.last_name = params[:last_name]
+    lead.email = params[:email]
+    lead.phone = params[:phone]
+    lead.blog = params[:blog]
+    lead.source = params[:source]
     lead.save
     lead
   end

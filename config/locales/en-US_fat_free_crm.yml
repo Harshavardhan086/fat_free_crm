@@ -500,6 +500,7 @@ en-US:
   opportunities: Opportunities
   opportunities_options: Opportunities Options
   opportunities_small: opportunities
+  orders_small: orders
   opportunity: Opportunity
   opportunity_small: opportunity
   opportunity_stages: Opportunity Stages
@@ -598,7 +599,9 @@ en-US:
   my_tasks: My Tasks
   no_task_records: You have no tasks.
   my_opportunities: My Opportunities
+  my_orders: My Orders
   no_opportunity_records: You have no opportunities.
+  no_order_records: You have no orders.
   my_accounts: My Accounts
   no_account_records: You have no accounts
   not_showing_hidden_entities: Not showing %{count} hidden %{entity}.

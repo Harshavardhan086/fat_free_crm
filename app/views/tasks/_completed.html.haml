@@ -14,7 +14,7 @@
   .indent
     %strike= auto_link h(completed.name)
     - if completed.asset_id?
-      == #{t :related} #{link_to(h(completed.asset.name), polymorphic_url(completed.asset))}
+      == #{t :related} #{link_to(h(completed.asset.full_name(current_user.preference[:leads_naming])), polymorphic_url(completed.asset))}
     &ndash;
     %tt
       %span.cool

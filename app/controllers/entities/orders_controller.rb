@@ -71,11 +71,7 @@ class OrdersController < EntitiesController
     logger.debug("Orders Controller- update****************** : #{params.inspect}")
     logger.debug("Orders controller- update******** Lead : #{params[:lead].inspect}")
     # logger.debug("Orders controller- update******** opportunity : #{params[:opportunity].inspect}")
-    lead = @order.lead
-    logger.debug("ORDER LEAD IS : #{lead.inspect}")
-    opportunity = @order.opportunity
-    lead.update(params[:lead])
-    # lead.save
+    @account, @opportunity, @contact, @lead = @order.order_attributes(params.permit!)
     # opportunity.update_attributes(params[:opportunity])
     logger.debug("Before Orders update*******")
     if @order.update_attributes(orders_params)
@@ -167,8 +163,8 @@ class OrdersController < EntitiesController
 
   def orders_params
     params.require(:order).permit(:user_id, :status, :state_of_incorporate,
-                                  leads_attribute: [:user_id, :first_name, :last_name, :email, :phone, :blog, :source],
-                                  opportunities_attribute: [:user_id, :stage, :amount, :discount]
+                                  leads_attributes: [:user_id, :first_name, :last_name, :email, :phone, :blog, :source],
+                                  opportunities_attributes: [:user_id, :stage, :amount, :discount]
     )
   end
 end

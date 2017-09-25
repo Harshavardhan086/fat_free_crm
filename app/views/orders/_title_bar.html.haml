@@ -1,11 +1,11 @@
 #confirm{ hidden }
 .title_tools#menu
-  = link_to_inline(:edit_order, edit_contact_path(@order), :text => t(:edit)) + " | "
+  = link_to_inline(:edit_order, edit_order_path(@order), :text => t(:edit)) + " | "
   = link_to_function(t(:delete) + '?', confirm_delete(@order))
 .title_tools#buttons
   = view_buttons
-.title#edit_contact_title
+.title#edit_order_title
   = h(@order.full_name(current_user.preference[:leads_naming]))
   = image_tag("loading.gif", :size => :thumb, :id => "loading", :style => "display: none;")
 
-%div#edit_contact{ hidden }
+%div#edit_order{ hidden }

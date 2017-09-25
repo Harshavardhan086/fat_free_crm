@@ -219,4 +219,8 @@ class OpportunitiesController < EntitiesController
     current_user.pref[:opportunities_sort_by]  = Opportunity.sort_by_map[params[:sort_by]] if params[:sort_by]
     session[:opportunities_filter] = params[:stage] if params[:stage]
   end
+
+  def opportunity_params
+    params.require(:opportunity).permit(:user_id, :stage, :amount, :discount)
+  end
 end
