@@ -35,22 +35,22 @@
           = t(:discount_number, number_to_currency(opportunity.discount, :precision => 0))
         - else
           = t(:no_discount)
-        = t(:probability_number, (opportunity.probability || 0).to_s + '%') + " | "
+        -#= t(:probability_number, (opportunity.probability || 0).to_s + '%') + " | "
 
-      - if opportunity.closes_on
-        - if won_or_lost
-          - if opportunity.closes_on >= Date.today
-            = t(:closing_date, l(opportunity.closes_on, :format => :mmddyy))
-          - else
-            = t(:closed_ago_on, :time_ago => distance_of_time_in_words(opportunity.closes_on, Date.today), :date => l(opportunity.closes_on, :format => :mmddyy))
-        - elsif opportunity.closes_on > Date.today
-          = t(:expected_to_close,  :time => distance_of_time_in_words(Date.today, opportunity.closes_on), :date => l(opportunity.closes_on, :format => :mmddyy))
-        - elsif opportunity.closes_on == Date.today
-          %span.warn= t(:closes_today)
-        - else
-          %span.warn= t(:past_due, distance_of_time_in_words(opportunity.closes_on, Date.today))
-      - else
-        = t(:no_closing_date)
+      -#- if opportunity.closes_on
+      -#  - if won_or_lost
+      -#    - if opportunity.closes_on >= Date.today
+      -#      = t(:closing_date, l(opportunity.closes_on, :format => :mmddyy))
+      -#    - else
+      -#      = t(:closed_ago_on, :time_ago => distance_of_time_in_words(opportunity.closes_on, Date.today), :date => l(opportunity.closes_on, :format => :mmddyy))
+      -#  - elsif opportunity.closes_on > Date.today
+      -#    = t(:expected_to_close,  :time => distance_of_time_in_words(Date.today, opportunity.closes_on), :date => l(opportunity.closes_on, :format => :mmddyy))
+      -#  - elsif opportunity.closes_on == Date.today
+      -#    %span.warn= t(:closes_today)
+      -#  - else
+      -#    %span.warn= t(:past_due, distance_of_time_in_words(opportunity.closes_on, Date.today))
+      -#- else
+      -#  = t(:no_closing_date)
 
       - if opportunity.tag_list.present?
         %dt

@@ -26,6 +26,8 @@ Rails.application.routes.draw do
   resources :emails,         only: [:destroy]
   resources :passwords,      only: [:new, :create, :edit, :update]
 
+  post 'copy_account_details' => "orders#copy_account_details"
+
   resources :accounts, id: /\d+/ do
     collection do
       get :advanced_search
@@ -121,6 +123,7 @@ Rails.application.routes.draw do
       post :discard
       post :subscribe
       post :unsubscribe
+
     end
   end
 
