@@ -25,7 +25,7 @@ class Order < ActiveRecord::Base
   exportable
   sortable by: [ "created_at DESC", "updated_at DESC"], default: "created_at DESC"
 
-  has_ransackable_associations %w(lead)
+  has_ransackable_associations %w(order)
   ransack_can_autocomplete
 
 

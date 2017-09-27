@@ -73,6 +73,7 @@ class OrdersController < EntitiesController
     # logger.debug("Orders controller- update******** opportunity : #{params[:opportunity].inspect}")
     @account, @opportunity, @contact, @lead = @order.order_attributes(params.permit!)
     # opportunity.update_attributes(params[:opportunity])
+    @order.account_id = @account.id
     logger.debug("Before Orders update*******")
     if @order.update_attributes(orders_params)
       respond_with(@order)
@@ -96,6 +97,17 @@ class OrdersController < EntitiesController
 
     respond_with(@orders) do |format|
       format.js { render :index }
+    end
+  end
+
+
+  def copy_account_details
+    logger.debug("OrdersController---copy_account_details********************************")
+    @account = Account.find_by_name(params[:account_name])
+    @address = Address.find_by_addressable_id(@account.id)
+    logger.debug("OrdersController--copy_account_details-- #{@account.inspect}")
+    respond_with do |format|
+      format.js
     end
   end
 
