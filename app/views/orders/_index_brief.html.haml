@@ -9,7 +9,9 @@
       %li= link_to_edit(order)
 
   .indent
-    = link_to_if can?(:read, order), order.full_name(current_user.preference[:leads_naming]), order
+    = link_to_if can?(:read, order), order.account.name, order
+    %tt
+      = t(:for_the_state_of, :state => order.state_of_incorporate)
     -#%tt
     -#  - if lead.company? && lead.title?
     -#    = t(:works_at, :job_title => lead.title, :company => lead.company)

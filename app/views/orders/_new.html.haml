@@ -2,6 +2,7 @@
   = link_to_close new_order_path
 
   = f.hidden_field :user_id
+  = f.error_messages :object_name => t('order')
   = render "account"
   -#= render "lead"
 
@@ -14,13 +15,16 @@
 
         %td= spacer
         %td
-          .label State of Incorporate
+          .label.req State of Incorporate
           = f.select :state_of_incorporate, @us_states , {:selected => (@order.state_of_incorporate || ""), :include_blank => true}, { :style => "width:160px" }
 
   = render "opportunity"
   = render "task"
 
   .buttonbar
-    = f.submit t(:create_order)
+    - if Setting.compound_address
+      = f.submit t(:create_order), :onclick => "crm.clear_all_hints()"
+    - else
+      = f.submit t(:create_order)
     #{t :or}
     = link_to_cancel new_order_path

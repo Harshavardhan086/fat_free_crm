@@ -16,6 +16,10 @@ class Order < ActiveRecord::Base
 
   scope :by_created_at, -> { order("created_at DESC") }
 
+  scope :text_search, ->(query) { ransack('state_of_incorporate_cont' => query).result }
+  # scope :text_search, ->(query) {
+  #   where("account.name", query)
+  # }
   uses_user_permissions
   acts_as_commentable
   uses_comment_extensions
@@ -25,9 +29,10 @@ class Order < ActiveRecord::Base
   exportable
   sortable by: [ "created_at DESC", "updated_at DESC"], default: "created_at DESC"
 
-  has_ransackable_associations %w(order)
+  has_ransackable_associations %w(leads tasks)
   ransack_can_autocomplete
 
+  # validates_presence_of :state_of_incorporate , message: :missing_state_of_incorporate
 
   def order_attributes(params)
     account_params = params[:account] ? params[:account] : {}
