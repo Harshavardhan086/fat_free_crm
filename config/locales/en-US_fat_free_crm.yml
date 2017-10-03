@@ -138,12 +138,18 @@ en-US:
               missing_first_name: ^Please specify first name.
             last_name:
               missing_last_name: ^Please specify last name.
+            email:
+              missing_email: ^Please specify email.
             access:
               share_lead: ^Please specify users to share the lead with.
         order:
           attributes:
             state_of_incorporate:
               missing_state_of_incorporate: ^Please specify State of Incorporate
+            account_id:
+              missing_account: ^Please specify Account.
+            lead_id:
+              missing_lead_details: ^Please specify first name,last name and email.
         opportunity:
           attributes:
             name:
@@ -480,6 +486,7 @@ en-US:
   #Views -> Orders
   #----------------------------------------------------------------------------
   order_small: order
+  order: Order
   create_order: Create Order
   state_of_incorporate: State of Incorporate
 

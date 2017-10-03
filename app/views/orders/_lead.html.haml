@@ -1,7 +1,7 @@
 = fields_for(@lead) do |l|
   = l.hidden_field :user_id
   = l.hidden_field :id
-
+  -#= error_messages_for :lead, :object_name => t('order')
   -#.subtitle #{t :opportunity}
   .section
     %small
@@ -17,7 +17,7 @@
           = l.text_field :last_name
       %tr
         %td
-          .label #{t :email}:
+          .label.req #{t :email}:
           = l.text_field :email
         %td= spacer
         %td

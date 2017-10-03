@@ -1,4 +1,4 @@
-= simple_form_for(@order, :html => one_submit_only, :remote => true) do |f|
+= simple_form_for(@order, :html => one_submit_only,authenticity_token: true , :remote => true) do |f|
   = link_to_close new_order_path
 
   = f.hidden_field :user_id
@@ -20,6 +20,7 @@
 
   = render "opportunity"
   = render "task"
+  -#= render "attachments"
 
   .buttonbar
     - if Setting.compound_address

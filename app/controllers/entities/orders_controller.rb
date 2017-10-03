@@ -7,6 +7,7 @@ class OrdersController < EntitiesController
     @lead = Lead.new(user: current_user,access: Setting.default_access)
     @opportunity = Opportunity.new(user: current_user)
     @account = Account.new(user: current_user)
+    @attachment = OrderFile.new
     @us_states = us_states
     @task = Task.new(user: current_user)
     @bucket = Setting.unroll(:task_bucket)[1..-1] << [t(:due_specific_date, default: 'On Specific Date...'), :specific_time]
@@ -19,6 +20,9 @@ class OrdersController < EntitiesController
     logger.debug("OrdersController- create *********************- OPPORTUNITY:  #{params[:opportunity].inspect}")
     logger.debug("OrdersController- create *********************- Task: #{params[:task].inspect}")
     logger.debug("OrdersController- create *********************- ORDER Is: #{@order.inspect}")
+    @us_states = us_states
+    @bucket = Setting.unroll(:task_bucket)[1..-1] << [t(:due_specific_date, default: 'On Specific Date...'), :specific_time]
+    @category = Setting.unroll(:task_category)
     @account, @opportunity, @contact, @lead = @order.order_attributes(params.permit!)
     logger.debug("Saved Lead---- #{@lead.id}")
     logger.debug("Saved opportunity---- #{@opportunity.inspect}")
@@ -30,9 +34,13 @@ class OrdersController < EntitiesController
     @order.lead_id = @lead.id
     @order.opportunity_id = @opportunity.id
     @order.account_id = @account.id
-    @order.save
-
-    Task.create_for_order(params[:task],@order)
+    if @order.save
+      logger.debug("saving the order****************")
+     Task.create_for_order(params[:task],@order)
+    else
+      logger.debug("NOT SAVING THE ORDER************")
+      @task = Task.new
+    end
 
     respond_with(@order) do |_format|
       if called_from_index_page?

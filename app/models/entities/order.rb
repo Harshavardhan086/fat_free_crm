@@ -4,6 +4,7 @@ class Order < ActiveRecord::Base
   belongs_to :opportunity
   belongs_to :account
   has_many :contacts
+  has_many :order_files
   has_many :emails, as: :mediator
   has_many :tasks, as: :asset, dependent: :destroy # , :order => 'created_at DESC'
 
@@ -32,7 +33,10 @@ class Order < ActiveRecord::Base
   has_ransackable_associations %w(leads tasks)
   ransack_can_autocomplete
 
-  # validates_presence_of :state_of_incorporate , message: :missing_state_of_incorporate
+  validates_presence_of :account_id, message: :missing_account
+  validates_presence_of :lead_id , message: :missing_lead_details
+  validates_presence_of :state_of_incorporate , message: :missing_state_of_incorporate
+
 
   def order_attributes(params)
     account_params = params[:account] ? params[:account] : {}
