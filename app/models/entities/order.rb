@@ -8,6 +8,7 @@ class Order < ActiveRecord::Base
   has_many :emails, as: :mediator
   has_many :tasks, as: :asset, dependent: :destroy # , :order => 'created_at DESC'
 
+  accepts_nested_attributes_for :order_files, reject_if: :all_blank, allow_destroy: true
   serialize :subscribed_users, Set
 
   # Show orders which either belong to the user and are unassigned, or are assigned to the user

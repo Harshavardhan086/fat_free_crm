@@ -23,11 +23,13 @@ class OrdersController < EntitiesController
     @us_states = us_states
     @bucket = Setting.unroll(:task_bucket)[1..-1] << [t(:due_specific_date, default: 'On Specific Date...'), :specific_time]
     @category = Setting.unroll(:task_category)
+    @attachment = OrderFile.new
     @account, @opportunity, @contact, @lead = @order.order_attributes(params.permit!)
     logger.debug("Saved Lead---- #{@lead.id}")
     logger.debug("Saved opportunity---- #{@opportunity.inspect}")
     logger.debug("Saved account---- #{@account.inspect}")
     logger.debug("Saved contact---- #{@contact.inspect}")
+
     @order.user_id = params[:order][:user_id]
     @order.status = params[:order][:status]
     @order.state_of_incorporate = params[:order][:state_of_incorporate]
@@ -67,7 +69,8 @@ class OrdersController < EntitiesController
     @lead = @order.lead
     @opportunity = @order.opportunity
     @us_states = us_states
-
+    @attachments = @order.order_files
+    logger.debug("Attached files are #{@attachments.inspect}")
     if params[:previous].to_s =~ /(\d+)\z/
       @previous = Lead.my.find_by_id(Regexp.last_match[1]) || Regexp.last_match[1].to_i
     end
@@ -184,7 +187,8 @@ class OrdersController < EntitiesController
   def orders_params
     params.require(:order).permit(:user_id, :status, :state_of_incorporate,
                                   leads_attributes: [:user_id, :first_name, :last_name, :email, :phone, :blog, :source],
-                                  opportunities_attributes: [:user_id, :stage, :amount, :discount]
+                                  opportunities_attributes: [:user_id, :stage, :amount, :discount],
+                                  order_files_attributes: [:file_name, {attachment: []}]
     )
   end
 end

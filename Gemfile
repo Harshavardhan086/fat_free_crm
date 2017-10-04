@@ -84,3 +84,8 @@ gem 'execjs'
 gem 'therubyracer', platform: :ruby unless ENV["CI"]
 gem 'nokogiri', '>= 1.6.8'
 gem 'activemodel-serializers-xml'
+gem 'carrierwave'
+gem "mini_magick"
+gem 'rmagick'
+gem 'remotipart', '~> 1.2'
+gem "cocoon"
