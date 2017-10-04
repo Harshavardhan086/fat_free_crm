@@ -188,7 +188,7 @@ class OrdersController < EntitiesController
     params.require(:order).permit(:user_id, :status, :state_of_incorporate,
                                   leads_attributes: [:user_id, :first_name, :last_name, :email, :phone, :blog, :source],
                                   opportunities_attributes: [:user_id, :stage, :amount, :discount],
-                                  order_files_attributes: [:file_name, {attachment: []}]
+                                  order_files_attributes: [:file_name, :attachment]
     )
   end
 end
