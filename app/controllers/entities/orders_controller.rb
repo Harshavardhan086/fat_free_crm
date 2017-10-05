@@ -122,6 +122,12 @@ class OrdersController < EntitiesController
     end
   end
 
+  def remove_attachment
+    logger.debug("orders controller---remove attachment")
+    @attachment_id = params[:attachment_id]
+    OrderFile.destroy(@attachment_id)
+  end
+
   def us_states
     [
         ['Alabama', 'AL'],

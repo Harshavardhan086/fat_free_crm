@@ -30,8 +30,11 @@
     %h4 Attached Files:
     - if !@attachments.nil?
       -@attachments.each do |a|
-        = link_to "#{a.file_name}", a.attachment.url, :target => "_blank"
-        %br
+        .attached_file{:id => "attached_file_#{a.id}"}
+          = link_to "#{a.file_name}", a.attachment.url,:id => "#{a.id}", :target => "_blank"
+          = link_to "x", "#",:id => "#{a.id}",:class=> "remove_attachment"
+          %br
+
 
     .buttonbar
       = f.submit t(:save_order)

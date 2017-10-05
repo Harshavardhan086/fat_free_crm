@@ -18,3 +18,11 @@ jQuery ($) ->
       account_name: account_name
     return
   )
+
+  $(document).on("click",".remove_attachment", ->
+    attachment_id= $(this).attr("id")
+    console.log("attacment_id is: "+ attachment_id)
+    $.post '/remove_attachment',
+      attachment_id: attachment_id
+    return
+  )

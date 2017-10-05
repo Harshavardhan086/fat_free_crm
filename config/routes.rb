@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   resources :passwords,      only: [:new, :create, :edit, :update]
 
   post 'copy_account_details' => "orders#copy_account_details"
+  post 'remove_attachment' => "orders#remove_attachment"
 
   resources :accounts, id: /\d+/ do
     collection do
