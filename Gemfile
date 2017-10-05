@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 # Uncomment the database that you have configured in config/database.yml
 # ----------------------------------------------------------------------
 gem 'mysql2'
+gem 'tzinfo-data'
+gem 'qbo_api'
+gem 'rack-oauth2'
 db_drivers = {
   "mysql" => "mysql2",
 }

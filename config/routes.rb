@@ -214,7 +214,13 @@ Rails.application.routes.draw do
     resources :fields, as: :custom_fields
     resources :fields, as: :core_fields
 
-    resources :settings, only: :index
+    resources :settings do
+      collection do
+        get :oauth2_redirect
+      end
+    end
+    #get "/admin/settings/oauth2_redirect" => "admin/settings#oauth2_redirect"
+
     resources :plugins,  only: :index
   end
 end

@@ -1,3 +1,20 @@
+= javascript_include_tag "https://appcenter.intuit.com/Content/IA/intuit.ipp.anywhere.js"
+
+-#= javascript_include_tag '#{QboApi::APP_CENTER_BASE}''+"/Content/IA/intuit.ipp.anywhere.js"
 .title Settings
 
-%p #{t :not_implemented}
+%p #{t :qbo_connect}
+
+%div <ipp:connectToIntuit></ipp:connectToIntuit>
+
+
+:javascript
+  $(document).ready(function() {
+   intuit.ipp.anywhere.setup({
+        grantUrl: '#{(QB_OAUTH2_CLIENT.authorization_uri(:scope => 'com.intuit.quickbooks.accounting', :state => session[:state]).html_safe )}',
+        datasources: {
+          quickbooks : true,
+          payments : true
+        }
+      });
+  });

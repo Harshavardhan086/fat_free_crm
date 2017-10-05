@@ -965,3 +965,7 @@ en-US:
     from_to: From %{from} to %{to}
     from_only: From %{from}
     to_only: Until %{to}
+
+# Quickbooks
+  #----------------------------------------------------------------------------
+  qbo_connect: Connect to Quickbooks
