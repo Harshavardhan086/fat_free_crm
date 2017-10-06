@@ -39,6 +39,7 @@ class OrdersController < EntitiesController
     if @order.save
       logger.debug("saving the order****************")
      Task.create_for_order(params[:task],@order)
+      Quickbook.create_customer(@account)
     else
       logger.debug("NOT SAVING THE ORDER************")
       @task = Task.new
