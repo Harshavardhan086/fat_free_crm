@@ -128,7 +128,7 @@ class Account < ActiveRecord::Base
   end
 
 
-  def self.account_create_for_order(params)
+  def self.account_create_for_order(params, lead)
     Rails.logger.debug("account Model account_create_for_order-------******")
     if params[:id].present?
       Rails.logger.debug("ID IS PRESENT***********")
@@ -136,6 +136,8 @@ class Account < ActiveRecord::Base
     else
       Rails.logger.debug("ID not PRESENT----CREATING NEW ACCOUNT")
       account = Account.new(params)
+      account.email = lead.email
+      account.phone = lead.phone
       account.save
     end
     account
