@@ -1,6 +1,6 @@
 class Quickbook < ApplicationRecord
 
-  def self.create_customer(customer_payload)
+  def self.create_customer(customer_payload, order)
 
     Rails.logger.debug("Quickbook model----- #{customer_payload.inspect}")
     Rails.logger.debug("Quickbook modke------ #{customer_payload.addresses.inspect}")
@@ -9,13 +9,14 @@ class Quickbook < ApplicationRecord
 
     customer = {
         "BillAddr": {
-            "Id": address[0].id,
-            "Line1": address[0].street1,
-            "City": address[0].city,
-            "CountrySubDivisionCode": address[0].state,
-            "PostalCode": address[0].zipcode,
+          "Id": address[0].id,
+          "Line1": address[0].street1,
+          "City": address[0].city,
+          "CountrySubDivisionCode": address[0].state,
+          "PostalCode": address[0].zipcode,
         },
-        "CompanyName": account.name,
+        "GivenName": account.name,
+        "DisplayName": account.name,
         "PrimaryPhone": {
             "FreeFormNumber": account.phone
         },
@@ -24,8 +25,8 @@ class Quickbook < ApplicationRecord
         }
 
     }
+
     Rails.logger.debug("Quickbook model******* PAYLOAD----- #{customer}")
-    # Rails.logger.debug("Quickbook modke------ #{customer_payload.addresses.to_json}")
 
     if Quickbook.first.present?
       q = Quickbook.find(1)
