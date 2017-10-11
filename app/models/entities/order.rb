@@ -26,7 +26,7 @@ class Order < ActiveRecord::Base
   acts_as_commentable
   uses_comment_extensions
   acts_as_taggable_on :tags
-  has_paper_trail class_name: 'Version', ignore: [:subscribed_users]
+  has_paper_trail class_name: 'Version', ignore: [:subscribed_users,:lead_id,:opportunity_id]
   has_fields
   exportable
   sortable by: [ "created_at DESC", "updated_at DESC"], default: "created_at DESC"
