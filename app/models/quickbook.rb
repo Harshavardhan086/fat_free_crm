@@ -1,6 +1,6 @@
 class Quickbook < ApplicationRecord
 
-  def self.create_customer(customer_payload, order)
+  def self.create_quickbooks_invoice(customer_payload, order)
     if account.qb_customer_ref > 0
       # customer is already created , just create an invoice
       post_invoice_to_quickbooks(order,account.qb_customer_ref)
@@ -82,6 +82,20 @@ class Quickbook < ApplicationRecord
         "value": qb_customer_ref
         }
     }
+
+
+
+    if Quickbook.first.present?
+      q = Quickbook.find(1)
+      qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
+      response = qbo_api.create(:invoice,payload: invoice)
+
+      if response.Id > 0
+        # Invoice is successfully created in Quickbooks , save this Id against
+      end
+    end
+
+
   end
 
 end
