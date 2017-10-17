@@ -86,8 +86,8 @@ class OrdersController < EntitiesController
     @account, @opportunity, @contact, @lead = @order.order_attributes(params.permit!)
     # opportunity.update_attributes(params[:opportunity])
     @order.account_id = @account.id
-    logger.debug("Before Orders update*******")
     if @order.update_attributes(orders_params)
+      Quickbook.update_invoice( @account,@order)
       respond_with(@order)
     end
 

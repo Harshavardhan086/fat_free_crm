@@ -10,6 +10,44 @@ class Quickbook < ApplicationRecord
     end
   end
 
+  def self.update_invoice(account, order)
+    amount = order.opportunity.amount
+    discount = order.opportunity.discount
+    invoice = {
+        "Line": [
+            {
+                "Amount": amount,
+                "DetailType": "SalesItemLineDetail",
+                "Description": "Law Services",
+                "SalesItemLineDetail":
+                    {
+                        "Qty": 1
+                    }
+            },
+            {
+                "Amount":discount,
+                "DetailType": "DiscountLineDetail",
+                "DiscountLineDetail":
+                    {
+                        "PercentBased": false
+                    }
+            }
+        ],
+        "CustomerRef": {
+            "value": account.qb_customer_ref
+        }
+    }
+
+    if Quickbook.first.present?
+      q = Quickbook.find(1)
+      qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
+      # logger.debug("Invoice id is: #{order.qb_invoice_ref}")
+      response = qbo_api.update(:invoice, id: order.qb_invoice_ref , payload: invoice)
+    end
+
+
+
+  end
 
 
   private
