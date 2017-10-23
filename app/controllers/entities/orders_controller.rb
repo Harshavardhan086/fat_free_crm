@@ -86,6 +86,7 @@ class OrdersController < EntitiesController
     @account, @opportunity, @contact, @lead = @order.order_attributes(params.permit!)
     # opportunity.update_attributes(params[:opportunity])
     @order.account_id = @account.id
+    logger.debug("Orders controller- update******** Order IS: #{@order.opportunity.amount.inspect}")
     if @order.update_attributes(orders_params)
       Quickbook.update_invoice( @account,@order)
       respond_with(@order)
@@ -185,6 +186,12 @@ class OrdersController < EntitiesController
         ['Wyoming', 'WY']
     ]
 
+  end
+
+  def send_invoice
+    logger.debug("OrdersController-----SEND INVOICE---- #{params.inspect}")
+    order = Order.find(params[:order_id])
+    Quickbook.send_invoice(order.qb_invoice_ref)
   end
 
   private

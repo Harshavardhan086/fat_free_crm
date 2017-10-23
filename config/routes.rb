@@ -28,6 +28,7 @@ Rails.application.routes.draw do
 
   post 'copy_account_details' => "orders#copy_account_details"
   post 'remove_attachment' => "orders#remove_attachment"
+  post 'send_invoice' => "orders#send_invoice"
 
   resources :accounts, id: /\d+/ do
     collection do

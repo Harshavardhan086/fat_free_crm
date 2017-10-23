@@ -47,17 +47,19 @@ class Quickbook < ApplicationRecord
   end
 
   def self.send_invoice(qb_invoice_ref)
+    logger.debug("**** Quickbook Model ---- send_invoice----")
     if Quickbook.first.present?
       q = Quickbook.find(1)
       qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId)
       entity = :invoice
-      path = "#{entity_path(entity)}/#{qb_invoice_ref}/send"
+      # path = "#{entity_path(entity)}/#{qb_invoice_ref}/send"
+      path = ["#{q.realmId}/invoice/#{qb_invoice_ref}/send"]
       response = qbo_api.request(:post, entity: entity, path: path)
 
       logger.debug("Send Quickbooks Invoice----THE RESPONSE IS : #{response.inspect}")
       if response["Id"].present?
-        order.qb_invoice_sent = 1
-        order.save
+        # order.qb_invoice_sent = 1
+        # order.save
       end
     end
   end

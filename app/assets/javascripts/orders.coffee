@@ -26,3 +26,11 @@ jQuery ($) ->
       attachment_id: attachment_id
     return
   )
+
+  $(document).on("click", ".send_invoice", ->
+    order_id = $(this).attr("id")
+    console.log("THE Order id is: " + order_id)
+    $.post '/send_invoice',
+      order_id: order_id
+    return
+  )
