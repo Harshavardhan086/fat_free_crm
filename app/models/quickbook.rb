@@ -51,15 +51,26 @@ class Quickbook < ApplicationRecord
     if Quickbook.first.present?
       q = Quickbook.find(1)
       qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId)
-      entity = :invoice
-      # path = "#{entity_path(entity)}/#{qb_invoice_ref}/send"
-      path = ["#{q.realmId}/invoice/#{qb_invoice_ref}/send"]
-      response = qbo_api.request(:post, entity: entity, path: path)
 
-      logger.debug("Send Quickbooks Invoice----THE RESPONSE IS : #{response.inspect}")
-      if response["Id"].present?
-        # order.qb_invoice_sent = 1
-        # order.save
+      # first fetch this invoice and then try to sned it.
+      entity = :invoice
+      path = "#{q.realmId}/invoice/#{qb_invoice_ref}/send"
+
+      get_response = qbo_api.get(entity, qb_invoice_ref);
+
+      if get_response["Id"].present?
+       # send out the invoice now
+        inv = {DeliveryAddress:{"Address": get_response["BillEmail"]["Address"]}, SyncToken: get_response["SyncToken"],
+                     MetaData: get_response["MetaData"]}
+
+        logger.debug("Send Quickbooks Invoice----PAYLOAD : #{inv}")
+
+        response = qbo_api.request(:post, entity: entity, path: path,payload: inv)
+        logger.debug("Send Quickbooks Invoice----THE RESPONSE IS : #{response.inspect}")
+        if response["Id"].present?
+           order.qb_invoice_sent = 1
+           order.save
+        end
       end
     end
   end
