@@ -1,12 +1,11 @@
 class Quickbook < ApplicationRecord
 
-  def self.create_quickbooks_invoice(customer_payload, order)
-    account = customer_payload
+  def self.create_quickbooks_invoice(account, order)
     if !account.qb_customer_ref.nil?
       # customer is already created , just create an invoice
-      post_invoice_to_quickbooks(order,account.qb_customer_ref)
+      post_invoice_to_quickbooks(order,account)
     else
-      post_customer_to_quickbooks(customer_payload,order)
+      post_customer_to_quickbooks(account,order)
     end
   end
 
@@ -35,6 +34,9 @@ class Quickbook < ApplicationRecord
         ],
         "CustomerRef": {
             "value": account.qb_customer_ref
+        },
+        "BillEmail": {
+            "Address": account.email
         }
     }
 
@@ -76,11 +78,10 @@ class Quickbook < ApplicationRecord
   end
 
   private
-  def self.post_customer_to_quickbooks(customer_payload, order)
+  def self.post_customer_to_quickbooks(account, order)
     Rails.logger.debug("Quickbook model----- #{customer_payload.inspect}")
     Rails.logger.debug("Quickbook modke------ #{customer_payload.addresses.inspect}")
 
-    account = customer_payload
     address = account.addresses
 
     customer = {
@@ -114,7 +115,7 @@ class Quickbook < ApplicationRecord
         account.save
       end
 
-      post_invoice_to_quickbooks(order,account.qb_customer_ref)
+      post_invoice_to_quickbooks(order,account)
 
       # if response.Id > 0
       #   # customer is successfully created in Quickbooks , save this Id against the account
@@ -130,7 +131,7 @@ class Quickbook < ApplicationRecord
     end
   end
 
-  def self.post_invoice_to_quickbooks(order, qb_customer_ref)
+  def self.post_invoice_to_quickbooks(order, account)
     amount = order.opportunity.amount
     discount = order.opportunity.discount
     logger.debug("post_invoice_to_quickbooks----AMOUNT : #{amount.inspect}******DISCOUNT : #{discount.inspect}")
@@ -155,7 +156,10 @@ class Quickbook < ApplicationRecord
             }
         ],
         "CustomerRef": {
-        "value": qb_customer_ref
+            "value": account.qb_customer_ref
+        },
+        "BillEmail": {
+            "Address": account.email
         }
     }
 
