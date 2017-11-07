@@ -32,6 +32,7 @@ en-US:
   admin_tab_fields: Custom Fields
   admin_tab_tags: Tags
   admin_tab_settings: Settings
+  admin_tab_business_rules: Business Rules
   admin_tab_plugins: Plugins
   affiliate: Affiliate
   competitor: Competitor
@@ -60,6 +61,9 @@ en-US:
   received_from_state: Received from State
   paid: Paid
   cancelled: Cancelled
+  llc: LLC
+  c_corp: C-Corp
+  s_corp: S-Corp
   prospecting: Prospecting
   analysis: Analysis
   presentation: Presentation
@@ -493,6 +497,7 @@ en-US:
   # Views -> Opportunities.
   #----------------------------------------------------------------------------
   amount: Amount
+  other_amount: Other Amount
   close_date: Close date
   closes_on: Closes on
   closed_ago_on: closed %{time_ago} ago on %{date}

@@ -1,0 +1,9 @@
+crm.flip_form('create_business_rule');
+
+- unless params[:cancel].true?
+  $('#create_business_rule').html('#{ j render(:partial => "new") }');
+  $('#empty').html('');
+  crm.set_title('create_business_rule', '#{t(:create_business_rule)}');
+
+- else
+  crm.set_title('create_group', '#{t(:business_rule)}');

@@ -479,6 +479,7 @@ en-GB:
   # Views -> Opportunities.
   #----------------------------------------------------------------------------
   amount: Amount
+  other_amount: Other Amount
   close_date: Close date
   closes_on: Closes on
   closed_ago_on: closed %{time_ago} ago on %{date}

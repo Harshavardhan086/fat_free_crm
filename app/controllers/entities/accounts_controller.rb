@@ -53,10 +53,22 @@ class AccountsController < EntitiesController
   # POST /accounts
   #----------------------------------------------------------------------------
   def create
+    logger.debug("the parameter commit is: #{params[:commit]}")
     @comment_body = params[:comment_body]
     respond_with(@account) do |_format|
       if @account.save
         @account.add_comment_by_user(@comment_body, current_user)
+        if params[:commit] == "Save and Order"
+          @order = Order.new
+          @create_order = true
+          @us_states = helpers.us_states
+
+          @lead = Lead.new(user: current_user,access: Setting.default_access)
+          @opportunity = Opportunity.new(user: current_user)
+          @account = @account
+          @attachment = OrderFile.new
+          @task = Task.new(user: current_user)
+        end
         # None: account can only be created from the Accounts index page, so we
         # don't have to check whether we're on the index page.
         @accounts = get_accounts

@@ -39,7 +39,8 @@ class Quickbook < ApplicationRecord
             "Address": account.email
         }
     }
-
+    logger.debug("account email: #{account.email}")
+    logger.debug("account ORDER REF: #{order.qb_invoice_ref}")
     if Quickbook.first.present?
       q = Quickbook.find(1)
       qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
@@ -48,7 +49,7 @@ class Quickbook < ApplicationRecord
     end
   end
 
-  def self.send_invoice(qb_invoice_ref)
+  def self.send_invoice(qb_invoice_ref, order)
     logger.debug("**** Quickbook Model ---- send_invoice----")
     if Quickbook.first.present?
       q = Quickbook.find(1)
@@ -71,6 +72,7 @@ class Quickbook < ApplicationRecord
         logger.debug("Send Quickbooks Invoice----THE RESPONSE IS : #{response.inspect}")
         if response["Id"].present?
            order.qb_invoice_sent = 1
+           order.status = "Invoice Sent"
            order.save
         end
       end
@@ -79,8 +81,8 @@ class Quickbook < ApplicationRecord
 
   private
   def self.post_customer_to_quickbooks(account, order)
-    Rails.logger.debug("Quickbook model----- #{customer_payload.inspect}")
-    Rails.logger.debug("Quickbook modke------ #{customer_payload.addresses.inspect}")
+    # Rails.logger.debug("Quickbook model----- #{customer_payload.inspect}")
+    # Rails.logger.debug("Quickbook modke------ #{customer_payload.addresses.inspect}")
 
     address = account.addresses
 

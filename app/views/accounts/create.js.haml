@@ -11,6 +11,9 @@
   = refresh_sidebar(:index, :filters)
   $('#paginate').html('#{ j render(:partial => "shared/paginate_with_per_page") }');
   crm.flick('empty', 'remove');
+  - if @create_order == true
+    $('##{create_id}').slideDown(50);
+    $('##{create_id}').html('#{ j render(:partial => "account_order") }');
 - else
   $('##{create_id}').html('#{ j render(:partial => "new") }');
   $('##{create_id}').effect("shake", { duration:250, distance: 6 });

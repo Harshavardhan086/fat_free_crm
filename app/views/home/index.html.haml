@@ -1,14 +1,14 @@
 
 = styles_for :task, :opportunity, :account
 
-.title
-  %span#title #{t :my_tasks}
-%ul.list#tasks
-  - unless @my_tasks.empty?
-    = render :partial => "home/task", :collection => @my_tasks.limit(10)
-    = show_hidden_entities_message(@my_tasks.count, 'task', 10)
-  - else
-    #{t :no_task_records}
+-#.title
+-#  %span#title #{t :my_tasks}
+-#%ul.list#tasks
+-#  - unless @my_tasks.empty?
+-#    = render :partial => "home/task", :collection => @my_tasks.limit(10)
+-#    = show_hidden_entities_message(@my_tasks.count, 'task', 10)
+-#  - else
+-#    #{t :no_task_records}
 
 .title
   %span#title #{t :my_orders}

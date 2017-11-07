@@ -203,15 +203,20 @@
   :url:
     :controller: home
 - :active: false
+  :text: :tab_accounts
+  :icon: :fa-users
+  :url:
+    :controller: accounts
+- :active: false
   :text: :tab_order
   :icon: :fa-users
   :url:
     :controller: orders
-- :active: false
-  :text: :tab_tasks
-  :icon: :fa-check-square-o
-  :url:
-    :controller: tasks
+#- :active: false
+#  :text: :tab_tasks
+#  :icon: :fa-check-square-o
+#  :url:
+#    :controller: tasks
 #- :active: false
 #  :text: :tab_campaigns
 #  :icon: :fa-bar-chart-o
@@ -222,11 +227,7 @@
 #  :icon: :fa-tasks
 #  :url:
 #    :controller: leads
-#- :active: false
-#  :text: :tab_accounts
-#  :icon: :fa-users
-#  :url:
-#    :controller: accounts
+
 #- :active: false
 #  :text: :tab_contacts
 #  :icon: :fa-user
@@ -270,6 +271,13 @@
   :icon: :fa-cogs
   :url:
     :controller: admin/settings
+- :active: false
+  :text: :admin_tab_business_rules
+  :icon: :fa-list-alt
+  :url:
+    :controller: admin/business_rules
+
+
 #- :active: false
 #  :text: :admin_tab_plugins
 #  :icon: :fa-plus-circle
@@ -352,6 +360,13 @@ order_status:
   - :received_from_state
   - :paid
   - :cancelled
+
+# Order Status.
+#------------------------------------------------------------------------------
+order_request_type :
+  - :llc
+  - :c_corp
+  - :s_corp
 
 # Opportunity Stage.
 #------------------------------------------------------------------------------

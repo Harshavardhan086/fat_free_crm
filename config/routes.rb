@@ -30,6 +30,8 @@ Rails.application.routes.draw do
   post 'remove_attachment' => "orders#remove_attachment"
   post 'send_invoice' => "orders#send_invoice"
 
+  post 'create_order_from_account' => "orders#create_order_from_account"
+
   resources :accounts, id: /\d+/ do
     collection do
       get :advanced_search
@@ -50,66 +52,66 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :campaigns, id: /\d+/ do
-    collection do
-      get :advanced_search
-      post :filter
-      get :options
-      get :field_group
-      match :auto_complete, via: [:get, :post]
-      get :redraw
-      get :versions
-    end
-    member do
-      put :attach
-      post :discard
-      post :subscribe
-      post :unsubscribe
-      get :leads
-      get :opportunities
-    end
-  end
+  # resources :campaigns, id: /\d+/ do
+  #   collection do
+  #     get :advanced_search
+  #     post :filter
+  #     get :options
+  #     get :field_group
+  #     match :auto_complete, via: [:get, :post]
+  #     get :redraw
+  #     get :versions
+  #   end
+  #   member do
+  #     put :attach
+  #     post :discard
+  #     post :subscribe
+  #     post :unsubscribe
+  #     get :leads
+  #     get :opportunities
+  #   end
+  # end
 
-  resources :contacts, id: /\d+/ do
-    collection do
-      get :advanced_search
-      post :filter
-      get :options
-      get :field_group
-      match :auto_complete, via: [:get, :post]
-      get :redraw
-      get :versions
-    end
-    member do
-      put :attach
-      post :discard
-      post :subscribe
-      post :unsubscribe
-      get :opportunities
-    end
-  end
+  # resources :contacts, id: /\d+/ do
+  #   collection do
+  #     get :advanced_search
+  #     post :filter
+  #     get :options
+  #     get :field_group
+  #     match :auto_complete, via: [:get, :post]
+  #     get :redraw
+  #     get :versions
+  #   end
+  #   member do
+  #     put :attach
+  #     post :discard
+  #     post :subscribe
+  #     post :unsubscribe
+  #     get :opportunities
+  #   end
+  # end
 
-  resources :leads, id: /\d+/ do
-    collection do
-      get :advanced_search
-      post :filter
-      get :options
-      get :field_group
-      match :auto_complete, via: [:get, :post]
-      get :redraw
-      get :versions
-      get :autocomplete_account_name
-    end
-    member do
-      get :convert
-      post :discard
-      post :subscribe
-      post :unsubscribe
-      put :attach
-      match :promote, via: [:patch, :put]
-      put :reject
-    end
-  end
+  # resources :leads, id: /\d+/ do
+  #   collection do
+  #     get :advanced_search
+  #     post :filter
+  #     get :options
+  #     get :field_group
+  #     match :auto_complete, via: [:get, :post]
+  #     get :redraw
+  #     get :versions
+  #     get :autocomplete_account_name
+  #   end
+  #   member do
+  #     get :convert
+  #     post :discard
+  #     post :subscribe
+  #     post :unsubscribe
+  #     put :attach
+  #     match :promote, via: [:patch, :put]
+  #     put :reject
+  #   end
+  # end
 
   resources :orders, id: /\d+/ do
     collection do
@@ -129,35 +131,35 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :opportunities, id: /\d+/ do
-    collection do
-      get :advanced_search
-      post :filter
-      get :options
-      get :field_group
-      match :auto_complete, via: [:get, :post]
-      get :redraw
-      get :versions
-    end
-    member do
-      put :attach
-      post :discard
-      post :subscribe
-      post :unsubscribe
-      get :contacts
-    end
-  end
+  # resources :opportunities, id: /\d+/ do
+  #   collection do
+  #     get :advanced_search
+  #     post :filter
+  #     get :options
+  #     get :field_group
+  #     match :auto_complete, via: [:get, :post]
+  #     get :redraw
+  #     get :versions
+  #   end
+  #   member do
+  #     put :attach
+  #     post :discard
+  #     post :subscribe
+  #     post :unsubscribe
+  #     get :contacts
+  #   end
+  # end
 
-  resources :tasks, id: /\d+/ do
-    collection do
-      post :filter
-      match :auto_complete, via: [:get, :post]
-    end
-    member do
-      put :complete
-      put :uncomplete
-    end
-  end
+  # resources :tasks, id: /\d+/ do
+  #   collection do
+  #     post :filter
+  #     match :auto_complete, via: [:get, :post]
+  #   end
+  #   member do
+  #     put :complete
+  #     put :uncomplete
+  #   end
+  # end
 
   resources :users, id: /\d+/, except: [:index, :destroy] do
     member do
@@ -221,7 +223,7 @@ Rails.application.routes.draw do
       end
     end
     #get "/admin/settings/oauth2_redirect" => "admin/settings#oauth2_redirect"
-
+    resources :business_rules
     resources :plugins,  only: :index
   end
 end

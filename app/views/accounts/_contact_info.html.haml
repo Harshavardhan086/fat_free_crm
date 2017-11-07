@@ -32,6 +32,6 @@
       %tr
         %td
           = render "shared/address", :f => f, :asset => @account, :type => :billing, :title => :billing_address
-        %td= spacer
-        %td
-          = render "shared/address", :f => f, :asset => @account, :type => :shipping, :title => :shipping_address, :same_as_billing => true
+        -#%td= spacer
+        -#%td
+        -#  = render "shared/address", :f => f, :asset => @account, :type => :shipping, :title => :shipping_address, :same_as_billing => true

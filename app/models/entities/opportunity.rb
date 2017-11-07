@@ -165,7 +165,7 @@ class Opportunity < ActiveRecord::Base
     opportunity
   end
 
-  def self.create_for_order(account, params, task)
+  def self.create_for_order( params, task)
     Rails.logger.debug("opportunity model------ #{params.inspect}")
     if params[:id].present?
       opportunity = Opportunity.find(params[:id])

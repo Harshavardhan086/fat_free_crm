@@ -49,13 +49,33 @@ class Order < ActiveRecord::Base
     Rails.logger.debug("opportunity_params--------- #{opportunity_params.inspect}")
     Rails.logger.debug("lead_params----------------#{lead_params.inspect}")
 
-    opportunity = Opportunity.create_for_order(account, opportunity_params, task_params)
+    opportunity = Opportunity.create_for_order( opportunity_params, task_params)
     lead = Lead.create_for_order(lead_params)
     account = Account.account_create_for_order(account_params, lead)
     Rails.logger.debug("The SAVED LEAD IS ************* #{lead.inspect}")
     contact = Contact.create_for_order(lead)
 
     [account, opportunity, contact, lead]
+  end
+
+
+  def self.order_attributes_from_accounts(params)
+    # account_params = params[:account_id] ? params[:account_id] : {}
+    opportunity_params = params[:opportunity] ? params[:opportunity] : {}
+    lead_params = params[:lead] ? params[:lead] : {}
+    contact_params = params[:contact] ? params[:contact] : {}
+    task_params = params[:task] ? params[:task] : {}
+    # Rails.logger.debug("account_params----------- #{account_params.inspect}")
+    Rails.logger.debug("opportunity_params--------- #{opportunity_params.inspect}")
+    Rails.logger.debug("lead_params----------------#{lead_params.inspect}")
+
+    opportunity = Opportunity.create_for_order( opportunity_params, task_params)
+    lead = Lead.create_for_order(lead_params)
+    # account = Account.account_create_for_order(account_params, lead)
+    Rails.logger.debug("The SAVED LEAD IS ************* #{lead.inspect}")
+    contact = Contact.create_for_order(lead)
+
+    [ opportunity, contact, lead]
   end
 
 
