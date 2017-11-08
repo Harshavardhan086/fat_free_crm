@@ -34,3 +34,15 @@ jQuery ($) ->
       order_id: order_id
     return
   )
+
+  $(document).on("change",".business_rule_filter", ->
+    console.log("looking for the change" + ($("#order_request_type").val()))
+    if $('#order_request_type').val() != '' and $('#order_state_of_incorporate').val() != ''
+      state = $('#order_state_of_incorporate').val()
+      request_type = $('#order_request_type').val()
+      $.post '/populate_amount',
+        state: state,
+        type: request_type
+      return
+    return
+  )

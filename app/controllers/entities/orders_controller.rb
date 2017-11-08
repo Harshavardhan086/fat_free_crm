@@ -74,7 +74,10 @@ class OrdersController < EntitiesController
     @order.opportunity_id = @opportunity.id
     @order.account_id = params[:account_id]
 
-    @order.save
+    if @order.save
+      Quickbook.create_quickbooks_invoice(@account, @order)
+    end
+
     # respond_with(@account) do |_format|
     #   # @accounts = get_accounts
     #   # get_data_for_sidebar
@@ -166,12 +169,23 @@ class OrdersController < EntitiesController
     Quickbook.send_invoice(order.qb_invoice_ref, order)
   end
 
+
+  def populate_amount
+    logger.debug("ORDERS CONTROLLER IN THE POPULATE HOURS *******************")
+    state = params[:state]
+    request_type = params[:type]
+
+    br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", state.to_s,request_type.to_s)
+    @amount = br.first.amount
+    logger.debug("the business rule is : #{br.inspect} AND THE AMOUNT IS : #{@amount}")
+  end
+
   private
 
   alias_method :get_orders, :get_list_of_records
 
   def orders_params
-    params.require(:order).permit(:user_id, :status, :state_of_incorporate,
+    params.require(:order).permit(:user_id, :status, :state_of_incorporate, :request_type,
                                   leads_attributes: [:user_id, :first_name, :last_name, :email, :phone, :blog, :source],
                                   opportunities_attributes: [:user_id, :stage, :amount, :discount],
                                   order_files_attributes: [:file_name, :attachment]

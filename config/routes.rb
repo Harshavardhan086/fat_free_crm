@@ -31,6 +31,8 @@ Rails.application.routes.draw do
   post 'send_invoice' => "orders#send_invoice"
 
   post 'create_order_from_account' => "orders#create_order_from_account"
+  post '/populate_amount' => "orders#populate_amount"
+  post '/edit_br' => "admin/business_rules#edit"
 
   resources :accounts, id: /\d+/ do
     collection do
@@ -224,6 +226,7 @@ Rails.application.routes.draw do
     end
     #get "/admin/settings/oauth2_redirect" => "admin/settings#oauth2_redirect"
     resources :business_rules
+
     resources :plugins,  only: :index
   end
 end

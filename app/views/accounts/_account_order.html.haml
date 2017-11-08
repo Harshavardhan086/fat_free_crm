@@ -19,11 +19,11 @@ THIS WILL BE THE ORDERS PAGE......
         %td= spacer
         %td
           .label.req State of Incorporate
-          = f.select :state_of_incorporate, @us_states , {:selected => (@order.state_of_incorporate || ""), :include_blank => true}, {:required => true, :style => "width:160px" }
+          = f.select :state_of_incorporate, @us_states , {:selected => (@order.state_of_incorporate || ""), :include_blank => true}, {class: "business_rule_filter",:required => true, :style => "width:160px" }
         %td= spacer
         %td
           .label.req Request Type
-          = f.select :request_type, Setting.unroll(:order_request_type), {:selected => (@order.type || ""), :include_blank => true}, {:required => true, :style => "width:160px" }
+          = f.select :request_type, Setting.unroll(:order_request_type), {:selected => (@order.request_type || ""), :include_blank => true}, {class: "business_rule_filter",:required => true, :style => "width:160px" }
 
   = render "orders/opportunity"
   -#= render "task"

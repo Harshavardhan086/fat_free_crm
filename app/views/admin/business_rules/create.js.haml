@@ -2,3 +2,6 @@
   $("#create_business_rule").effect("shake", { duration:250, distance: 6 });
   $("#create_br_error").html("This Entry already exists")
   $("#create_br_error").css('background-color','red')
+- else
+  $("#create_business_rule").slideUp(250);
+  $('#business_rules_table').html('#{ j render(:partial => "index") }');

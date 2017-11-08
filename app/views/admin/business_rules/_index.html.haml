@@ -1,0 +1,19 @@
+%table
+  %tbody
+    %tr
+      %td State
+      %td Request Type
+      %td Amount
+      %td Documents
+    - @all_business_rules.each do |br|
+      %tr{:id => "business_rule_#{br.id}"}
+        %td
+          = br.state_of_incorporate
+        %td
+          = br.request_type
+        %td
+          = br.amount
+        %td
+          
+        %td
+          = link_to "Edit","#", :class => "rule", :id => br.id

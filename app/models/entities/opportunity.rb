@@ -178,6 +178,7 @@ class Opportunity < ActiveRecord::Base
     opportunity.user_id = params[:user_id]
     opportunity.stage = params[:stage]
     opportunity.amount = params[:amount]
+    opportunity.other_amount = params[:other_amount]
     opportunity.discount = params[:discount]
     opportunity.assigned_to = task[:assigned_to]
     opportunity.save

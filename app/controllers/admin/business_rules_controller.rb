@@ -2,7 +2,7 @@ class Admin::BusinessRulesController < Admin::ApplicationController
   before_action "set_current_tab('admin/business_rules')", only: [:index]
 
   def index
-    @all_business_rules = BusinessRule.all
+    @all_business_rules = BusinessRule.all.order(:state_of_incorporate)
   end
 
   def new
@@ -19,6 +19,7 @@ class Admin::BusinessRulesController < Admin::ApplicationController
     business_rule.amount = params[:business_rule][:amount]
     business_rule.request_type = params[:business_rule][:request_type]
     business_rule.web = params[:business_rule][:web]
+    business_rule.documents =  params[:business_rule][:documents]
 
     br_for_state = BusinessRule.where(state_of_incorporate: params[:business_rule][:state_of_incorporate])
     request_type_array = Array.new
@@ -36,21 +37,31 @@ class Admin::BusinessRulesController < Admin::ApplicationController
       business_rule.save
     end
 
+    @all_business_rules = BusinessRule.all.order(:state_of_incorporate)
 
   end
 
   def edit
+    logger.debug("BR CONTROLLER ----- EDIT")
+    br_id = params[:br_id]
 
+    @business_rule = BusinessRule.find(br_id)
+    logger.debug("BR CONTROLLER ----- EDIT ***************")
+    @us_states = helpers.us_states
   end
 
   def update
+    logger.debug("BR CONTROLLER -------- UPDATE")
+    br = BusinessRule.find(params[:id])
+    br.update_attributes(business_rule_params)
 
+    @all_business_rules = BusinessRule.all.order(:state_of_incorporate)
   end
 
   private
 
   def business_rule_params
-    params.require(:business_rule).permit(:state_of_incorporate, :amount, :request_type ,{documents: []})
+    params.require(:business_rule).permit(:state_of_incorporate, :amount, :request_type,:web ,{documents: []})
   end
 
 end

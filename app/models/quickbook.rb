@@ -81,8 +81,8 @@ class Quickbook < ApplicationRecord
 
   private
   def self.post_customer_to_quickbooks(account, order)
-    # Rails.logger.debug("Quickbook model----- #{customer_payload.inspect}")
-    # Rails.logger.debug("Quickbook modke------ #{customer_payload.addresses.inspect}")
+    Rails.logger.debug("Quickbook model----- #{account.inspect}")
+    Rails.logger.debug("Quickbook modke------ #{account.addresses.inspect}")
 
     address = account.addresses
 

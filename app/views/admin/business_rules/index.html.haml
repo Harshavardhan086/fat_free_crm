@@ -1,20 +1,6 @@
-
-
-%table
-  %tbody
-    %tr
-      %td State
-      %td Request Type
-      %td Amount
-      %td Documents
-    - @all_business_rules.each do |br|
-      %tr
-        %td
-          = br.state_of_incorporate
-        %td
-          = br.request_type
-        %td
-          = br.amount
+#edit_business_rule
+#business_rules_table
+  = render "index"
 .title_tools
   = link_to_inline(:create_business_rule, new_admin_business_rule_path, :text => t(:create_business_rule))
 
