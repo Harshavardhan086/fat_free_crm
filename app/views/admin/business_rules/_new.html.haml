@@ -24,8 +24,14 @@
           .label Web
           = f.text_field :web, :style => "width:110px; text-align:right;"
 
-  = f.file_field :documents, multiple: true
+  %h3 Add Files
+  #attachments
+    = f.fields_for :business_rule_files do |of|
+      = render "business_rule_file_fields", :f => of
+    .links
+      = link_to_add_association "add" , f, :business_rule_files
+
   .buttonbar
-    = f.submit t(:create_business_rule), :id => :business_rule_submit
+    = f.submit t(:create_business_rule)
     or
     = link_to_cancel new_admin_business_rule_path

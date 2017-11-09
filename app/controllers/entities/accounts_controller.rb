@@ -80,6 +80,18 @@ class AccountsController < EntitiesController
   # PUT /accounts/1
   #----------------------------------------------------------------------------
   def update
+
+    if params[:commit] == "Save and Order"
+      @order = Order.new
+      @create_order = true
+      @us_states = helpers.us_states
+
+      @lead = Lead.new(user: current_user,access: Setting.default_access)
+      @opportunity = Opportunity.new(user: current_user)
+      @account = @account
+      @attachment = OrderFile.new
+      @task = Task.new(user: current_user)
+    end
     respond_with(@account) do |_format|
       # Must set access before user_ids, because user_ids= method depends on access value.
       @account.access = params[:account][:access] if params[:account][:access]

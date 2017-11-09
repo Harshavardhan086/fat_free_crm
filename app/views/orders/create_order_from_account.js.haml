@@ -1,3 +1,5 @@
 $('#create_account').slideUp(250);
 
+$('#account_#{@account.id}').slideUp(250);
 
+$('#account_#{@account.id}').replaceWith('#{ j render(:partial => 'accounts/account', :collection => [ @account]) }');

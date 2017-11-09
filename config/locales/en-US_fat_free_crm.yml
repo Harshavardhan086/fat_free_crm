@@ -494,6 +494,8 @@ en-US:
   create_order: Create Order
   state_of_incorporate: State of Incorporate
 
+  create_business_rule: Create Business Rule
+  save_business_rule: Save Business Rule
   # Views -> Opportunities.
   #----------------------------------------------------------------------------
   amount: Amount

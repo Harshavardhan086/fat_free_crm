@@ -1,1 +1,3 @@
 $('#opportunity_amount').attr("value", '#{j (@amount)}')
+- if !@attachments.blank?
+  $('#required_files').html('#{ j render(:partial => "required_files") }')

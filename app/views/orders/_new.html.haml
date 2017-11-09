@@ -31,7 +31,7 @@
       = render "order_file_fields", :f => of
     .links
       = link_to_add_association "add" , f, :order_files
-
+  #required_files
   .buttonbar
     - if Setting.compound_address
       = f.submit t(:create_order), :onclick => "crm.clear_all_hints()"

@@ -44,7 +44,7 @@ class OrdersController < EntitiesController
     if @order.save
       logger.debug("saving the order****************")
      # Task.create_for_order(params[:task],@order)
-      Quickbook.create_quickbooks_invoice(@account, @order)
+     #  Quickbook.create_quickbooks_invoice(@account, @order)
     else
       logger.debug("NOT SAVING THE ORDER************")
       @task = Task.new
@@ -70,12 +70,13 @@ class OrdersController < EntitiesController
     @order.user_id = params[:order][:user_id]
     @order.status = params[:order][:status]
     @order.state_of_incorporate = params[:order][:state_of_incorporate]
+    @order.request_type = params[:order][:request_type]
     @order.lead_id = @lead.id
     @order.opportunity_id = @opportunity.id
     @order.account_id = params[:account_id]
 
     if @order.save
-      Quickbook.create_quickbooks_invoice(@account, @order)
+      # Quickbook.create_quickbooks_invoice(@account, @order)
     end
 
     # respond_with(@account) do |_format|
@@ -121,7 +122,7 @@ class OrdersController < EntitiesController
     @order.account_id = @account.id
     logger.debug("Orders controller- update******** Order IS: #{@order.opportunity.amount.inspect}")
     if @order.update_attributes(orders_params)
-      Quickbook.update_invoice( @account,@order)
+      # Quickbook.update_invoice( @account,@order)
       respond_with(@order)
     end
 
@@ -177,7 +178,10 @@ class OrdersController < EntitiesController
 
     br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", state.to_s,request_type.to_s)
     @amount = br.first.amount
-    logger.debug("the business rule is : #{br.inspect} AND THE AMOUNT IS : #{@amount}")
+    logger.debug("the business rule is : #{br.inspect} AND THE AMOUNT IS : #{@amount}******* AND attachment is: #{br.first.business_rule_files.inspect}")
+
+    @attachments = br.first.business_rule_files
+
   end
 
   private

@@ -1,4 +1,3 @@
-This will be your edit form
 .remote
   = form_for([:admin, @business_rule], :html => one_submit_only, :remote => true) do |f|
     = link_to_close edit_admin_business_rule_path(@business_rule)
@@ -26,7 +25,21 @@ This will be your edit form
             .label Web
             = f.text_field :web, :style => "width:110px; text-align:right;"
 
-    = f.file_field :documents, multiple: true
+    %h3 Add Files
+    #attachments
+      = f.fields_for :business_rule_files do |of|
+        -#= render "business_rule_file_fields", :f => of
+      .links
+        = link_to_add_association "add" , f, :business_rule_files
+
+    %h3 Files Added
+    - if !@attachments.nil?
+      -@attachments.each do |a|
+        .attached_file{:id => "attached_file_#{a.id}"}
+          = link_to "#{a.file_name}", a.attachment.url,:id => "#{a.id}", :target => "_blank"
+          = link_to "x", "#",:id => "#{a.id}",:class=> "remove_attachment"
+          %br
+
     .buttonbar
       = f.submit t(:save_business_rule)
       or

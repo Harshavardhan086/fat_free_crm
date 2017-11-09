@@ -6,8 +6,8 @@
 Rails.application.routes.draw do
   resources :lists
 
-  root to: 'home#index'
-
+  # root to: 'home#index'
+  root to: 'accounts#index'
   get 'activities' => 'home#index'
   get 'admin'      => 'admin/users#index',       :as => :admin
   get 'login'      => 'authentications#new',     :as => :login
@@ -133,24 +133,24 @@ Rails.application.routes.draw do
     end
   end
 
-  # resources :opportunities, id: /\d+/ do
-  #   collection do
-  #     get :advanced_search
-  #     post :filter
-  #     get :options
-  #     get :field_group
-  #     match :auto_complete, via: [:get, :post]
-  #     get :redraw
-  #     get :versions
-  #   end
-  #   member do
-  #     put :attach
-  #     post :discard
-  #     post :subscribe
-  #     post :unsubscribe
-  #     get :contacts
-  #   end
-  # end
+  resources :opportunities, id: /\d+/ do
+    collection do
+      get :advanced_search
+      post :filter
+      get :options
+      get :field_group
+      match :auto_complete, via: [:get, :post]
+      get :redraw
+      get :versions
+    end
+    member do
+      put :attach
+      post :discard
+      post :subscribe
+      post :unsubscribe
+      get :contacts
+    end
+  end
 
   # resources :tasks, id: /\d+/ do
   #   collection do

@@ -1,5 +1,5 @@
 = form_for(@order, url: create_order_from_account_path,authenticity_token: true ,:multipart => true, :remote => true) do |f|
-  = link_to_close new_account_path
+  = link_to_close edit_account_path(@account)
 
   = hidden_field_tag :from_accounts, "true"
   = hidden_field_tag :user_id, current_user.id
@@ -31,7 +31,7 @@
   -#    = render "account_order_file_fields", :f => of
   -#  .links
   -#    = link_to_add_association "add" , f, :order_files
-  #required_files
+  -##required_files
   -#= render "task"
   -#%h3 Add Files
   -##attachments
@@ -46,4 +46,4 @@
     - else
       = f.submit t(:create_order)
     #{t :or}
-    = link_to_cancel new_account_path
+    = link_to_cancel edit_account_path(@account)
