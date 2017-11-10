@@ -8,3 +8,5 @@ jQuery ($) ->
       br_id: br_id
     return
   )
+
+  $('#business_rules').DataTable responsive: true

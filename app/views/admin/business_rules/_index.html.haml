@@ -1,11 +1,11 @@
 #edit_business_rule
-%table
+%table#business_rules(class="table table-bordered " )
   %tbody
     %tr
-      %td State
-      %td Request Type
-      %td Amount
-      %td Documents
+      %th State
+      %th Request Type
+      %th Amount
+      %th Documents
     - @all_business_rules.each do |br|
       %tr{:id => "business_rule_#{br.id}"}
         %td

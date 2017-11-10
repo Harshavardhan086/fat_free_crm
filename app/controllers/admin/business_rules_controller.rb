@@ -14,7 +14,7 @@ class Admin::BusinessRulesController < Admin::ApplicationController
 
   def create
     logger.debug("businessRules controlled ************* create")
-    @business_rule = BusinessRule.new
+    @business_rule = BusinessRule.new(business_rule_params)
     @business_rule.state_of_incorporate = params[:business_rule][:state_of_incorporate]
     @business_rule.amount = params[:business_rule][:amount]
     @business_rule.request_type = params[:business_rule][:request_type]
@@ -34,7 +34,7 @@ class Admin::BusinessRulesController < Admin::ApplicationController
 
     else
       @new_business_rule = "true"
-      @business_rule.save
+      @business_rule.save(business_rule_params)
     end
 
     @all_business_rules = BusinessRule.all.order(:state_of_incorporate)

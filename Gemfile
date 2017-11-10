@@ -92,3 +92,4 @@ gem "mini_magick"
 gem 'rmagick'
 gem 'remotipart', '~> 1.2'
 gem "cocoon"
+gem 'jquery-datatables-rails', '~> 3.4.0'
