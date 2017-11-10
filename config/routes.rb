@@ -32,6 +32,7 @@ Rails.application.routes.draw do
 
   post 'create_order_from_account' => "orders#create_order_from_account"
   post '/populate_amount' => "orders#populate_amount"
+  post '/populate_total_amount' => "orders#populate_total_amount"
   post '/edit_br' => "admin/business_rules#edit"
 
   resources :accounts, id: /\d+/ do

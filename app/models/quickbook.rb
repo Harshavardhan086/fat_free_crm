@@ -18,11 +18,11 @@ class Quickbook < ApplicationRecord
 
     customer = {
         "BillAddr": {
-            "Id": address[0].id,
-            "Line1": address[0].street1,
-            "City": address[0].city,
-            "CountrySubDivisionCode": address[0].state,
-            "PostalCode": address[0].zipcode,
+            "Id": !address.blank? ? address[0].id : "",
+            "Line1": !address.blank? ? address[0].street1 : "",
+            "City": !address.blank? ? address[0].city : "",
+            "CountrySubDivisionCode": !address.blank? ? address[0].state : "",
+            "PostalCode": !address.blank? ? address[0].zipcode : "",
         },
         "GivenName": account.name,
         "DisplayName": account.name,
@@ -36,16 +36,22 @@ class Quickbook < ApplicationRecord
     }
 
     if Quickbook.first.present?
-      q = Quickbook.find(1)
-      qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
-      response = qbo_api.create(:customer,payload: customer)
+      begin
+        q = Quickbook.find(1)
+        qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
+        response = qbo_api.create(:customer,payload: customer)
+        logger.debug("post_customer_to_quickbooks-----THE RESPONSE OF THE QBO_API IS : #{response.inspect}")
 
-      logger.debug("post_customer_to_quickbooks-----THE RESPONSE OF THE QBO_API IS : #{response.inspect}")
-
-      if response["Id"].present?
-        account.qb_customer_ref = response["Id"]
-        account.save
+        if response["Id"].present?
+          account.qb_customer_ref = response["Id"]
+          account.save
+        end
+      rescue => error
+        Rails.logger.error ("the error in the QB is :#{error}")
+        # Account.destroy(account.id)
       end
+
+
     end
   end
 
@@ -82,39 +88,49 @@ class Quickbook < ApplicationRecord
     logger.debug("account email: #{account.email}")
     logger.debug("account ORDER REF: #{order.qb_invoice_ref}")
     if Quickbook.first.present?
-      q = Quickbook.find(1)
-      qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
-      # logger.debug("Invoice id is: #{order.qb_invoice_ref}")
-      response = qbo_api.update(:invoice, id: order.qb_invoice_ref , payload: invoice)
+      begin
+        q = Quickbook.find(1)
+        qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
+        # logger.debug("Invoice id is: #{order.qb_invoice_ref}")
+        response = qbo_api.update(:invoice, id: order.qb_invoice_ref , payload: invoice)
+      rescue => error
+        Rails.logger.error ("the error in the QB is :#{error}")
+        # Account.destroy(account.id)
+      end
     end
   end
 
   def self.send_invoice(qb_invoice_ref, order)
     logger.debug("**** Quickbook Model ---- send_invoice----")
     if Quickbook.first.present?
-      q = Quickbook.find(1)
-      qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId)
+      begin
+        q = Quickbook.find(1)
+        qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId)
 
-      # first fetch this invoice and then try to sned it.
-      entity = :invoice
-      path = "#{q.realmId}/invoice/#{qb_invoice_ref}/send"
+        # first fetch this invoice and then try to sned it.
+        entity = :invoice
+        path = "#{q.realmId}/invoice/#{qb_invoice_ref}/send"
 
-      get_response = qbo_api.get(entity, qb_invoice_ref);
+        get_response = qbo_api.get(entity, qb_invoice_ref);
 
-      if get_response["Id"].present?
-       # send out the invoice now
-        inv = {DeliveryAddress:{"Address": get_response["BillEmail"]["Address"]}, SyncToken: get_response["SyncToken"],
-                     MetaData: get_response["MetaData"]}
+        if get_response["Id"].present?
+         # send out the invoice now
+          inv = {DeliveryAddress:{"Address": get_response["BillEmail"]["Address"]}, SyncToken: get_response["SyncToken"],
+                       MetaData: get_response["MetaData"]}
 
-        logger.debug("Send Quickbooks Invoice----PAYLOAD : #{inv}")
+          logger.debug("Send Quickbooks Invoice----PAYLOAD : #{inv}")
 
-        response = qbo_api.request(:post, entity: entity, path: path,payload: inv)
-        logger.debug("Send Quickbooks Invoice----THE RESPONSE IS : #{response.inspect}")
-        if response["Id"].present?
-           order.qb_invoice_sent = 1
-           order.status = "Invoice Sent"
-           order.save
+          response = qbo_api.request(:post, entity: entity, path: path,payload: inv)
+          logger.debug("Send Quickbooks Invoice----THE RESPONSE IS : #{response.inspect}")
+          if response["Id"].present?
+             order.qb_invoice_sent = 1
+             order.status = "Invoice Sent"
+             order.save
+          end
         end
+      rescue => error
+        Rails.logger.error ("the error in the QB is :#{error}")
+        # Account.destroy(account.id)
       end
     end
   end
@@ -146,19 +162,23 @@ class Quickbook < ApplicationRecord
     }
 
     if Quickbook.first.present?
-      q = Quickbook.find(1)
-      qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
-      response = qbo_api.create(:customer,payload: customer)
+      begin
+        q = Quickbook.find(1)
+        qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
+        response = qbo_api.create(:customer,payload: customer)
 
-      logger.debug("post_customer_to_quickbooks-----THE RESPONSE OF THE QBO_API IS : #{response.inspect}")
+        logger.debug("post_customer_to_quickbooks-----THE RESPONSE OF THE QBO_API IS : #{response.inspect}")
 
-      if response["Id"].present?
-        account.qb_customer_ref = response["Id"]
-        account.save
+        if response["Id"].present?
+          account.qb_customer_ref = response["Id"]
+          account.save
+        end
+
+        post_invoice_to_quickbooks(order,account)
+      rescue => error
+        Rails.logger.error ("the error in the QB is :#{error}")
+        # Account.destroy(account.id)
       end
-
-      post_invoice_to_quickbooks(order,account)
-
       # if response.Id > 0
       #   # customer is successfully created in Quickbooks , save this Id against the account
       #
@@ -206,18 +226,22 @@ class Quickbook < ApplicationRecord
     }
 
     if Quickbook.first.present?
-      q = Quickbook.find(1)
-      qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
-      response = qbo_api.create(:invoice,payload: invoice)
+      begin
+        q = Quickbook.find(1)
+        qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
+        response = qbo_api.create(:invoice,payload: invoice)
 
-      logger.debug("post_invoice_to_quickbooks----THE INVOICE CREATING RESPONSE IS : #{response.inspect}")
-      if response["Id"].present?
-        order.qb_invoice_ref = response["Id"]
-        order.save
-        # Invoice is successfully created in Quickbooks , save this Id against
+        logger.debug("post_invoice_to_quickbooks----THE INVOICE CREATING RESPONSE IS : #{response.inspect}")
+        if response["Id"].present?
+          order.qb_invoice_ref = response["Id"]
+          order.save
+          # Invoice is successfully created in Quickbooks , save this Id against
+        end
+      rescue => error
+        Rails.logger.error ("the error in the QB is :#{error}")
+        # Account.destroy(account.id)
       end
     end
-
   end
 
 end

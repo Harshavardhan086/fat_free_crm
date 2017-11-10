@@ -1,3 +1,10 @@
 $('#opportunity_amount').attr("value", '#{j (@amount)}')
+
+$('#opportunity_total_amount').attr("value", '#{j (@amount)}')
 - if !@attachments.blank?
   $('#required_files').html('#{ j render(:partial => "required_files") }')
+-#- else
+-#  $('#required_files').hide();
+
+- if !@web.blank?
+  $('#web').html('#{ j render(:partial => "state_website") }')

@@ -6,6 +6,7 @@
       %th Request Type
       %th Amount
       %th Documents
+      %th Website
     - @all_business_rules.each do |br|
       %tr{:id => "business_rule_#{br.id}"}
         %td
@@ -18,5 +19,8 @@
           - if !br.business_rule_files.blank?
             - br.business_rule_files.each do |brf|
               = brf.file_name
+        %td
+          - if br.web.present?
+            = br.web
         %td
           = link_to "Edit","#", :class => "rule", :id => br.id

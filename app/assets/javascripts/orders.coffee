@@ -46,3 +46,17 @@ jQuery ($) ->
       return
     return
   )
+
+  $(document).on("change",".opportunity_amount", ->
+    console.log("the value of the amount is :" + ($("#opportunity_amount").val()))
+    if $("#opportunity_amount").val() != ''
+      amount =  $("#opportunity_amount").val()
+      other = $("#opportunity_other_amount").val()
+      discount = $("#opportunity_discount").val()
+      $.post '/populate_total_amount',
+        amount: amount,
+        other: other,
+        discount: discount
+      return
+    return
+  )

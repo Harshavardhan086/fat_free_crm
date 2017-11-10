@@ -7,7 +7,8 @@
 
     = link_to(t(:quick_find), "#", :id => "jumper") << " |"
     = link_to(t(:profile), profile_path) << " |"
-    = link_to(t(:back_to_crm), root_path) << " |"
+    -#= link_to(t(:back_to_crm), root_path) << " |"
+    = link_to(t(:back_to_portal), root_path) << " |"
     = link_to(t(:logout), logout_path, :method => :delete)
     = render "/layouts/jumpbox"
   %h3

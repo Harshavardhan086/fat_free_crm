@@ -733,7 +733,8 @@ en-US:
   # Views -> Admin
   #----------------------------------------------------------------------------
   back_to_crm: Back to Fat Free CRM
-  crm_admin_page: Fat Free CRM Administration
+  back_to_portal: Back To Portal
+  crm_admin_page: CRM Administration
 
   # Views -> Admin -> Groups
   #----------------------------------------------------------------------------

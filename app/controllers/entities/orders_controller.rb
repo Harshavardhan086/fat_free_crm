@@ -178,10 +178,24 @@ class OrdersController < EntitiesController
 
     br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", state.to_s,request_type.to_s)
     @amount = br.first.amount
-    logger.debug("the business rule is : #{br.inspect} AND THE AMOUNT IS : #{@amount}******* AND attachment is: #{br.first.business_rule_files.inspect}")
+    logger.debug("the business rule is : #{br.inspect} AND THE AMOUNT IS : #{@amount}*******
+                          AND attachment is: #{br.first.business_rule_files.inspect}*******
+                          AND Web is : #{br.first.web.blank?}")
 
     @attachments = br.first.business_rule_files
 
+    @web = br.first.web
+
+  end
+
+  def populate_total_amount
+    logger.debug("ORDERS CONTROLLER -- populate_total_amount")
+    amount = params[:amount].to_i
+    other = !params[:other].blank? ? params[:other].to_i : 0
+    discount = !params[:discount].blank? ? params[:discount].to_i : 0
+
+    @total = (amount + other - discount).to_s
+    logger.debug("the TOTAL AMOUNT IS : #{@total}")
   end
 
   private

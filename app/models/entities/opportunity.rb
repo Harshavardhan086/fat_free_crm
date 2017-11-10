@@ -180,6 +180,7 @@ class Opportunity < ActiveRecord::Base
     opportunity.amount = params[:amount]
     opportunity.other_amount = params[:other_amount]
     opportunity.discount = params[:discount]
+    opportunity.total_amount = params[:total_amount]
     opportunity.assigned_to = task[:assigned_to]
     opportunity.save
     opportunity
