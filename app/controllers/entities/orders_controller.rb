@@ -44,7 +44,7 @@ class OrdersController < EntitiesController
     if @order.save
       logger.debug("saving the order****************")
      # Task.create_for_order(params[:task],@order)
-     #  Quickbook.create_quickbooks_invoice(@account, @order)
+      Quickbook.create_quickbooks_invoice(@account, @order)
     else
       logger.debug("NOT SAVING THE ORDER************")
       @task = Task.new
@@ -76,7 +76,7 @@ class OrdersController < EntitiesController
     @order.account_id = params[:account_id]
 
     if @order.save
-      # Quickbook.create_quickbooks_invoice(@account, @order)
+      Quickbook.create_quickbooks_invoice(@account, @order)
     end
 
     # respond_with(@account) do |_format|
@@ -122,7 +122,7 @@ class OrdersController < EntitiesController
     @order.account_id = @account.id
     logger.debug("Orders controller- update******** Order IS: #{@order.opportunity.amount.inspect}")
     if @order.update_attributes(orders_params)
-      # Quickbook.update_invoice( @account,@order)
+      Quickbook.update_invoice( @account,@order)
       respond_with(@order)
     end
 

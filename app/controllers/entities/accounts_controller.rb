@@ -73,7 +73,10 @@ class AccountsController < EntitiesController
         # don't have to check whether we're on the index page.
         @accounts = get_accounts
         get_data_for_sidebar
+
+        Quickbook.create_customer(@account)
       end
+
     end
   end
 
@@ -96,6 +99,7 @@ class AccountsController < EntitiesController
       # Must set access before user_ids, because user_ids= method depends on access value.
       @account.access = params[:account][:access] if params[:account][:access]
       get_data_for_sidebar if @account.update_attributes(resource_params)
+      Quickbook.create_customer(@account)
     end
   end
 
