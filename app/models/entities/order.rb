@@ -18,7 +18,7 @@ class Order < ActiveRecord::Base
 
   scope :by_created_at, -> { order("created_at DESC") }
 
-  scope :text_search, ->(query) { ransack('state_of_incorporate_cont' => query).result }
+  scope :text_search, ->(query) { ransack('state_of_incorporate_or_name_cont' => query).result }
   # scope :text_search, ->(query) {
   #   where("account.name", query)
   # }

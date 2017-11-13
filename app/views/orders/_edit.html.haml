@@ -31,7 +31,16 @@
       .links
         = link_to_add_association "add" , f, :order_files
     #required_files
+      - if !@br_attachments.nil?
+        %h4 Required Files:
+        - @br_attachments.each do |a|
+          .required_attached_file{:id => "required_attached_file_#{a.id}"}
+            = link_to "#{a.file_name}", a.attachment.url,:id => "#{a.id}", :target => "_blank"
+            -#= link_to "x", "#",:id => "#{a.id}",:class=> "remove_attachment"
+            %br
     #web
+      - if !@br_web.nil?
+        State Website : #{link_to @br_web, @br_web.to_url, target: :_blank}
     %h4 Attached Files:
 
     - if !@attachments.nil?
@@ -40,7 +49,6 @@
           = link_to "#{a.file_name}", a.attachment.url,:id => "#{a.id}", :target => "_blank"
           = link_to "x", "#",:id => "#{a.id}",:class=> "remove_attachment"
           %br
-
 
     .buttonbar
       = f.submit t(:save_order)

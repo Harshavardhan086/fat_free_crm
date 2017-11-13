@@ -46,12 +46,54 @@ class Quickbook < ApplicationRecord
           account.qb_customer_ref = response["Id"]
           account.save
         end
+        flash[:success] = "Welcome to the Sample App! after save"
       rescue => error
         Rails.logger.error ("the error in the QB is :#{error}")
-        # Account.destroy(account.id)
       end
 
 
+    end
+  end
+
+  def self.update_customer(account)
+
+    Rails.logger.debug("Quickbook model----- #{account.inspect}")
+    Rails.logger.debug("Quickbook modke------ #{account.addresses.inspect}")
+
+    address = account.addresses
+
+    customer = {
+        "BillAddr": {
+            "Id": !address.blank? ? address[0].id : "",
+            "Line1": !address.blank? ? address[0].street1 : "",
+            "City": !address.blank? ? address[0].city : "",
+            "CountrySubDivisionCode": !address.blank? ? address[0].state : "",
+            "PostalCode": !address.blank? ? address[0].zipcode : "",
+        },
+        "GivenName": account.name,
+        "DisplayName": account.name,
+        "PrimaryPhone": {
+            "FreeFormNumber": account.phone
+        },
+        "PrimaryEmailAddr": {
+            "Address": account.email
+        }
+
+    }
+    if Quickbook.first.present?
+      begin
+        q = Quickbook.find(1)
+        qbo_api = QboApi.new(access_token: q.access_token, realm_id: q.realmId )
+        response = QboApi.update(:customer, id: account.qb_customer_ref, payload: customer )
+        logger.debug("update_customer_on_quickbooks-----THE RESPONSE OF THE QBO_API IS : #{response.inspect}")
+
+        if response["Id"].present?
+          account.qb_customer_ref = response["Id"]
+          account.save
+        end
+      rescue => error
+        Rails.logger.error ("the error in the QB is :#{error}")
+      end
     end
   end
 
@@ -95,7 +137,7 @@ class Quickbook < ApplicationRecord
         response = qbo_api.update(:invoice, id: order.qb_invoice_ref , payload: invoice)
       rescue => error
         Rails.logger.error ("the error in the QB is :#{error}")
-        # Account.destroy(account.id)
+
       end
     end
   end
@@ -130,7 +172,6 @@ class Quickbook < ApplicationRecord
         end
       rescue => error
         Rails.logger.error ("the error in the QB is :#{error}")
-        # Account.destroy(account.id)
       end
     end
   end
@@ -144,11 +185,11 @@ class Quickbook < ApplicationRecord
 
     customer = {
         "BillAddr": {
-            "Id": address[0].id,
-            "Line1": address[0].street1,
-            "City": address[0].city,
-            "CountrySubDivisionCode": address[0].state,
-            "PostalCode": address[0].zipcode,
+            "Id": !address.blank? ? address[0].id : "",
+            "Line1": !address.blank? ? address[0].street1 : "",
+            "City": !address.blank? ? address[0].city : "",
+            "CountrySubDivisionCode": !address.blank? ? address[0].state : "",
+            "PostalCode": !address.blank? ? address[0].zipcode : "",
         },
         "GivenName": account.name,
         "DisplayName": account.name,
@@ -177,7 +218,6 @@ class Quickbook < ApplicationRecord
         post_invoice_to_quickbooks(order,account)
       rescue => error
         Rails.logger.error ("the error in the QB is :#{error}")
-        # Account.destroy(account.id)
       end
       # if response.Id > 0
       #   # customer is successfully created in Quickbooks , save this Id against the account
@@ -239,7 +279,6 @@ class Quickbook < ApplicationRecord
         end
       rescue => error
         Rails.logger.error ("the error in the QB is :#{error}")
-        # Account.destroy(account.id)
       end
     end
   end

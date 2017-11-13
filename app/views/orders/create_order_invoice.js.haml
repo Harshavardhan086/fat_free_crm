@@ -1,0 +1,4 @@
+-#$("#orders").html('#{ j render "orders/index" }');
+- entity_name = controller.controller_name.singularize.underscore #account
+
+$("#order_#{@order.id}").replaceWith('#{ j render(:partial => entity_name, :collection => [ @order ]) }');

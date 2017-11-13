@@ -60,3 +60,11 @@ jQuery ($) ->
       return
     return
   )
+
+  $(document).on("click",".create_order_invoice", ->
+    console.log("in the create_order_invoice** Order id is: " + ($(this).attr("id")))
+    order_id = $(this).attr("id")
+    $. post "/create_order_invoice",
+      order_id: order_id
+    return
+  )

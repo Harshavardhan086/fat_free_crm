@@ -39,6 +39,7 @@ class OrdersController < EntitiesController
     @order.status = params[:order][:status]
     @order.state_of_incorporate = params[:order][:state_of_incorporate]
     @order.lead_id = @lead.id
+    @order.name = @account.name
     @order.opportunity_id = @opportunity.id
     @order.account_id = @account.id
     if @order.save
@@ -72,6 +73,7 @@ class OrdersController < EntitiesController
     @order.state_of_incorporate = params[:order][:state_of_incorporate]
     @order.request_type = params[:order][:request_type]
     @order.lead_id = @lead.id
+    @order.name = @account.name
     @order.opportunity_id = @opportunity.id
     @order.account_id = params[:account_id]
 
@@ -106,6 +108,16 @@ class OrdersController < EntitiesController
     @us_states = helpers.us_states
     @attachments = @order.order_files
     logger.debug("Attached files are #{@attachments.inspect}")
+
+    br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", @order.state_of_incorporate.to_s,@order.request_type.to_s)
+
+    @br_attachments = br.first.business_rule_files if !br.blank?
+
+    logger.debug("the business rule is : #{br.inspect}--------the required attached file are : #{@br_attachments.inspect}")
+    @br_web = br.first.web if !br.blank?
+
+
+
     if params[:previous].to_s =~ /(\d+)\z/
       @previous = Lead.my.find_by_id(Regexp.last_match[1]) || Regexp.last_match[1].to_i
     end
@@ -170,6 +182,17 @@ class OrdersController < EntitiesController
     Quickbook.send_invoice(order.qb_invoice_ref, order)
   end
 
+  def create_order_invoice
+    logger.debug("Orders Controller-- create_order_invoice")
+    @order = Order.find(params[:order_id])
+
+    account = @order.account
+
+    logger.debug("the order is : #{@order.inspect}----------- Account is : #{account.inspect}")
+    Quickbook.create_quickbooks_invoice(account, @order)
+
+  end
+
 
   def populate_amount
     logger.debug("ORDERS CONTROLLER IN THE POPULATE HOURS *******************")
@@ -203,7 +226,7 @@ class OrdersController < EntitiesController
   alias_method :get_orders, :get_list_of_records
 
   def orders_params
-    params.require(:order).permit(:user_id, :status, :state_of_incorporate, :request_type,
+    params.require(:order).permit(:user_id, :status, :state_of_incorporate, :request_type, :name,
                                   leads_attributes: [:user_id, :first_name, :last_name, :email, :phone, :blog, :source],
                                   opportunities_attributes: [:user_id, :stage, :amount, :discount],
                                   order_files_attributes: [:file_name, :attachment]

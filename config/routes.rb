@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   post 'copy_account_details' => "orders#copy_account_details"
   post 'remove_attachment' => "orders#remove_attachment"
   post 'send_invoice' => "orders#send_invoice"
+  post 'create_order_invoice' => "orders#create_order_invoice"
 
   post 'create_order_from_account' => "orders#create_order_from_account"
   post '/populate_amount' => "orders#populate_amount"

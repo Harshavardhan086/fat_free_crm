@@ -4,7 +4,8 @@
 .section
   %small#account_contact_intro{ hidden_if(!collapsed) }
     = t(:intro, t(:account_small)) unless edit
-  #account_contact{ hidden_if(collapsed) }
+  -##account_contact{ hidden_if(collapsed) }
+  #account_contact{ }
     %table
       %tr
         %td{ :colspan => 3 }
@@ -28,7 +29,7 @@
         %td= spacer
         %td
           .label.top.req Email:
-          = f.text_field :email
+          = f.text_field :email,:required => true
       %tr
         %td
           = render "shared/address", :f => f, :asset => @account, :type => :billing, :title => :billing_address

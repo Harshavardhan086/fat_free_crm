@@ -8,10 +8,14 @@
     - if can?(:update, order)
       %li= link_to_edit(order)
       %li= link_to "Send Invoice", "#", id: "#{order.id}",class: "send_invoice",data: {confirm: "Are you sure you want to send the invoice to #{order.account.name}"} if !order.qb_invoice_sent?
+      %li= link_to "Create Invoice","#",id: "#{order.id}", class: "create_order_invoice" if order.qb_invoice_ref.nil?
   .indent
     = link_to_if can?(:read, order), order.account.name, order
     %tt
       = t(:for_the_state_of, :state => order.state_of_incorporate)
+    %tt
+      - if order.qb_invoice_ref.nil?
+        = "| The invoice for this order was not created, click on create invoice to create invoice in QB"
     -#%tt
     -#  - if lead.company? && lead.title?
     -#    = t(:works_at, :job_title => lead.title, :company => lead.company)
