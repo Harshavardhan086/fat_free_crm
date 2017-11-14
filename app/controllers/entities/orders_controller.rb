@@ -134,7 +134,11 @@ class OrdersController < EntitiesController
     @order.account_id = @account.id
     logger.debug("Orders controller- update******** Order IS: #{@order.opportunity.amount.inspect}")
     if @order.update_attributes(orders_params)
-      Quickbook.update_invoice( @account,@order)
+      if @order.qb_invoice_ref.nil?
+        Quickbook.create_quickbooks_invoice(@account, @order)
+      else
+        Quickbook.update_invoice( @account,@order)
+      end
       respond_with(@order)
     end
 
