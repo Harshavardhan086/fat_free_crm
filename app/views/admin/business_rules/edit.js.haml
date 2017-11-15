@@ -1,0 +1,6 @@
+- if params[:cancel] == "true" # <----------------- Hide [Edit business_rules]
+  $("#edit_business_rule").hide
+  $('#business_rules_table').html('#{ j render(:partial => "index") }');
+- else
+  $("#business_rule_#{@business_rule.id}").hide();
+  $("#edit_business_rule").html('#{ j render(:partial => "edit") }');

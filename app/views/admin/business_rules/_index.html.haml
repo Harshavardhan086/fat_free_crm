@@ -1,0 +1,26 @@
+#edit_business_rule
+%table#business_rules(class="table table-bordered " )
+  %tbody
+    %tr
+      %th State
+      %th Request Type
+      %th Amount
+      %th Documents
+      %th Website
+    - @all_business_rules.each do |br|
+      %tr{:id => "business_rule_#{br.id}"}
+        %td
+          = br.state_of_incorporate
+        %td
+          = br.request_type
+        %td
+          = br.amount
+        %td
+          - if !br.business_rule_files.blank?
+            - br.business_rule_files.each do |brf|
+              = brf.file_name
+        %td
+          - if br.web.present?
+            = br.web
+        %td
+          = link_to "Edit","#", :class => "rule", :id => br.id

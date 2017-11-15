@@ -1,0 +1,6 @@
+
+#business_rules_table
+  = render "index"
+= link_to_inline(:create_business_rule, new_admin_business_rule_path, :text => t(:create_business_rule))
+
+.remote#create_business_rule{ hidden }

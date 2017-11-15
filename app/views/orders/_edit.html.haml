@@ -15,7 +15,11 @@
           %td= spacer
           %td
             .label.req State of Incorporate
-            = f.select :state_of_incorporate, @us_states , {:selected => (@order.state_of_incorporate || ""), :include_blank => true}, { :style => "width:160px" }
+            = f.select :state_of_incorporate, @us_states , {:selected => (@order.state_of_incorporate || ""), :include_blank => true}, { class: "business_rule_filter",:style => "width:160px" }
+          %td= spacer
+          %td
+            .label.req Request Type
+            = f.select :request_type, Setting.unroll(:order_request_type), {:selected => (@order.request_type || ""), :include_blank => true}, {class: "business_rule_filter",:required => true, :style => "width:160px" }
 
 
     = render "opportunity"
@@ -26,15 +30,25 @@
         -#= render "order_file_fields", :f => of
       .links
         = link_to_add_association "add" , f, :order_files
-
+    #required_files
+      - if !@br_attachments.nil?
+        %h4 Required Files:
+        - @br_attachments.each do |a|
+          .required_attached_file{:id => "required_attached_file_#{a.id}"}
+            = link_to "#{a.file_name}", a.attachment.url,:id => "#{a.id}", :target => "_blank"
+            -#= link_to "x", "#",:id => "#{a.id}",:class=> "remove_attachment"
+            %br
+    #web
+      - if !@br_web.nil?
+        State Website : #{link_to @br_web, @br_web.to_url, target: :_blank}
     %h4 Attached Files:
+
     - if !@attachments.nil?
       -@attachments.each do |a|
         .attached_file{:id => "attached_file_#{a.id}"}
           = link_to "#{a.file_name}", a.attachment.url,:id => "#{a.id}", :target => "_blank"
           = link_to "x", "#",:id => "#{a.id}",:class=> "remove_attachment"
           %br
-
 
     .buttonbar
       = f.submit t(:save_order)

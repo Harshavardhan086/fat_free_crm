@@ -7,10 +7,16 @@
     crm.flip_form('edit_#{entity_name}');
     crm.set_title('edit_#{entity_name}', '#{h @entity.name}');
     = refresh_sidebar(:show, :summary)
+    - if @create_order == true
+      $("#edit_account").html('#{ j render(:partial => "edit_account_order") }');
+      $("#edit_account").slideDown(250);
   - else
     $('##{id}').replaceWith('#{ j render(:partial => entity_name, :collection => [ @entity ]) }');
     $('##{id}').effect("highlight", { duration:1500 });
     = refresh_sidebar(:index, :filters)
+    - if @create_order == true
+      $('##{dom_id(@entity)}').slideDown(250);
+      $('##{dom_id(@entity)}').html('#{ j render(:partial => "edit_account_order") }');
 - else
   $('##{id}').html('#{ j render(:partial => "edit") }');
   $('##{id}').effect("shake", { duration:250, distance: 6 });

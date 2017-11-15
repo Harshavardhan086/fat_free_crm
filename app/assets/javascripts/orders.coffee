@@ -34,3 +34,37 @@ jQuery ($) ->
       order_id: order_id
     return
   )
+
+  $(document).on("change",".business_rule_filter", ->
+    console.log("looking for the change" + ($("#order_request_type").val()))
+    if $('#order_request_type').val() != '' and $('#order_state_of_incorporate').val() != ''
+      state = $('#order_state_of_incorporate').val()
+      request_type = $('#order_request_type').val()
+      $.post '/populate_amount',
+        state: state,
+        type: request_type
+      return
+    return
+  )
+
+  $(document).on("change",".opportunity_amount", ->
+    console.log("the value of the amount is :" + ($("#opportunity_amount").val()))
+    if $("#opportunity_amount").val() != ''
+      amount =  $("#opportunity_amount").val()
+      other = $("#opportunity_other_amount").val()
+      discount = $("#opportunity_discount").val()
+      $.post '/populate_total_amount',
+        amount: amount,
+        other: other,
+        discount: discount
+      return
+    return
+  )
+
+  $(document).on("click",".create_order_invoice", ->
+    console.log("in the create_order_invoice** Order id is: " + ($(this).attr("id")))
+    order_id = $(this).attr("id")
+    $. post "/create_order_invoice",
+      order_id: order_id
+    return
+  )

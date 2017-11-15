@@ -8,19 +8,24 @@ class OrdersController < EntitiesController
     @opportunity = Opportunity.new(user: current_user)
     @account = Account.new(user: current_user)
     @attachment = OrderFile.new
-    @us_states = us_states
+    @us_states = helpers.us_states
     @task = Task.new(user: current_user)
     @bucket = Setting.unroll(:task_bucket)[1..-1] << [t(:due_specific_date, default: 'On Specific Date...'), :specific_time]
     @category = Setting.unroll(:task_category)
   end
 
   def create
+
+    @from_accounts = params[:from_accounts]
+    if params[:from_accounts] == "true"
+      return redirect_to create_order_from_account_path, lead: params[:lead], account_id: params[:account_id], opportunity: params[:opportunity], order: params[:order]
+    end
     logger.debug("OrdersController- create *********************- LEAD:  #{params[:lead].inspect}")
     logger.debug("OrdersController- create *********************- ACCOUNT:  #{params[:account].inspect}")
     logger.debug("OrdersController- create *********************- OPPORTUNITY:  #{params[:opportunity].inspect}")
     logger.debug("OrdersController- create *********************- Task: #{params[:task].inspect}")
     logger.debug("OrdersController- create *********************- ORDER Is: #{@order.inspect}")
-    @us_states = us_states
+    @us_states = helpers.us_states
     @bucket = Setting.unroll(:task_bucket)[1..-1] << [t(:due_specific_date, default: 'On Specific Date...'), :specific_time]
     @category = Setting.unroll(:task_category)
     @attachment = OrderFile.new
@@ -34,11 +39,12 @@ class OrdersController < EntitiesController
     @order.status = params[:order][:status]
     @order.state_of_incorporate = params[:order][:state_of_incorporate]
     @order.lead_id = @lead.id
+    @order.name = @account.name
     @order.opportunity_id = @opportunity.id
     @order.account_id = @account.id
     if @order.save
       logger.debug("saving the order****************")
-     Task.create_for_order(params[:task],@order)
+     # Task.create_for_order(params[:task],@order)
       Quickbook.create_quickbooks_invoice(@account, @order)
     else
       logger.debug("NOT SAVING THE ORDER************")
@@ -50,6 +56,36 @@ class OrdersController < EntitiesController
         @orders = get_orders
       end
     end
+  end
+
+
+  def create_order_from_account
+    logger.debug("IN THE create_order_from_account****** #{params.inspect}")
+    logger.debug("OrdersController- create_order_from_account *********************- LEAD:  #{params[:lead].inspect}")
+    logger.debug("OrdersController- create_order_from_account *********************- ACCOUNT:  #{params[:account_id].inspect}")
+    logger.debug("OrdersController- create_order_from_account *********************- OPPORTUNITY:  #{params[:opportunity].inspect}")
+    logger.debug("OrdersController- create_order_from_account *********************- ORDER Is: #{@order.inspect}")
+    @order = Order.new
+    @opportunity, @contact, @lead = Order.order_attributes_from_accounts(params.permit!)
+    @account = Account.find(params[:account_id])
+    @order.user_id = params[:order][:user_id]
+    @order.status = params[:order][:status]
+    @order.state_of_incorporate = params[:order][:state_of_incorporate]
+    @order.request_type = params[:order][:request_type]
+    @order.lead_id = @lead.id
+    @order.name = @account.name
+    @order.opportunity_id = @opportunity.id
+    @order.account_id = params[:account_id]
+
+    if @order.save
+      Quickbook.create_quickbooks_invoice(@account, @order)
+    end
+
+    # respond_with(@account) do |_format|
+    #   # @accounts = get_accounts
+    #   # get_data_for_sidebar
+    # end
+
   end
 
   # GET /orders
@@ -69,9 +105,19 @@ class OrdersController < EntitiesController
     @account = @order.account || Account.new(user: current_user)
     @lead = @order.lead
     @opportunity = @order.opportunity
-    @us_states = us_states
+    @us_states = helpers.us_states
     @attachments = @order.order_files
     logger.debug("Attached files are #{@attachments.inspect}")
+
+    br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", @order.state_of_incorporate.to_s,@order.request_type.to_s)
+
+    @br_attachments = br.first.business_rule_files if !br.blank?
+
+    logger.debug("the business rule is : #{br.inspect}--------the required attached file are : #{@br_attachments.inspect}")
+    @br_web = br.first.web if !br.blank?
+
+
+
     if params[:previous].to_s =~ /(\d+)\z/
       @previous = Lead.my.find_by_id(Regexp.last_match[1]) || Regexp.last_match[1].to_i
     end
@@ -88,7 +134,11 @@ class OrdersController < EntitiesController
     @order.account_id = @account.id
     logger.debug("Orders controller- update******** Order IS: #{@order.opportunity.amount.inspect}")
     if @order.update_attributes(orders_params)
-      Quickbook.update_invoice( @account,@order)
+      if @order.qb_invoice_ref.nil?
+        Quickbook.create_quickbooks_invoice(@account, @order)
+      else
+        Quickbook.update_invoice( @account,@order)
+      end
       respond_with(@order)
     end
 
@@ -130,68 +180,49 @@ class OrdersController < EntitiesController
     OrderFile.destroy(@attachment_id)
   end
 
-  def us_states
-    [
-        ['Alabama', 'AL'],
-        ['Alaska', 'AK'],
-        ['Arizona', 'AZ'],
-        ['Arkansas', 'AR'],
-        ['California', 'CA'],
-        ['Colorado', 'CO'],
-        ['Connecticut', 'CT'],
-        ['Delaware', 'DE'],
-        ['District of Columbia', 'DC'],
-        ['Florida', 'FL'],
-        ['Georgia', 'GA'],
-        ['Hawaii', 'HI'],
-        ['Idaho', 'ID'],
-        ['Illinois', 'IL'],
-        ['Indiana', 'IN'],
-        ['Iowa', 'IA'],
-        ['Kansas', 'KS'],
-        ['Kentucky', 'KY'],
-        ['Louisiana', 'LA'],
-        ['Maine', 'ME'],
-        ['Maryland', 'MD'],
-        ['Massachusetts', 'MA'],
-        ['Michigan', 'MI'],
-        ['Minnesota', 'MN'],
-        ['Mississippi', 'MS'],
-        ['Missouri', 'MO'],
-        ['Montana', 'MT'],
-        ['Nebraska', 'NE'],
-        ['Nevada', 'NV'],
-        ['New Hampshire', 'NH'],
-        ['New Jersey', 'NJ'],
-        ['New Mexico', 'NM'],
-        ['New York', 'NY'],
-        ['North Carolina', 'NC'],
-        ['North Dakota', 'ND'],
-        ['Ohio', 'OH'],
-        ['Oklahoma', 'OK'],
-        ['Oregon', 'OR'],
-        ['Pennsylvania', 'PA'],
-        ['Puerto Rico', 'PR'],
-        ['Rhode Island', 'RI'],
-        ['South Carolina', 'SC'],
-        ['South Dakota', 'SD'],
-        ['Tennessee', 'TN'],
-        ['Texas', 'TX'],
-        ['Utah', 'UT'],
-        ['Vermont', 'VT'],
-        ['Virginia', 'VA'],
-        ['Washington', 'WA'],
-        ['West Virginia', 'WV'],
-        ['Wisconsin', 'WI'],
-        ['Wyoming', 'WY']
-    ]
-
-  end
-
   def send_invoice
     logger.debug("OrdersController-----SEND INVOICE---- #{params.inspect}")
     order = Order.find(params[:order_id])
-    Quickbook.send_invoice(order.qb_invoice_ref)
+    Quickbook.send_invoice(order.qb_invoice_ref, order)
+  end
+
+  def create_order_invoice
+    logger.debug("Orders Controller-- create_order_invoice")
+    @order = Order.find(params[:order_id])
+
+    account = @order.account
+
+    logger.debug("the order is : #{@order.inspect}----------- Account is : #{account.inspect}")
+    Quickbook.create_quickbooks_invoice(account, @order)
+
+  end
+
+
+  def populate_amount
+    logger.debug("ORDERS CONTROLLER IN THE POPULATE HOURS *******************")
+    state = params[:state]
+    request_type = params[:type]
+
+    br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", state.to_s,request_type.to_s)
+    @amount = br.first.amount
+    logger.debug("the business rule is : #{br.inspect} AND THE AMOUNT IS : #{@amount}*******
+                          AND attachment is: #{br.first.business_rule_files.inspect}*******
+                          AND Web is : #{br.first.web.blank?}")
+
+    @attachments = br.first.business_rule_files
+
+    @web = br.first.web
+
+  end
+
+  def populate_total_amount
+    logger.debug("ORDERS CONTROLLER -- populate_total_amount")
+    amount = params[:amount].to_i
+    other = !params[:other].blank? ? params[:other].to_i : 0
+    discount = !params[:discount].blank? ? params[:discount].to_i : 0
+
+    @total = (amount + other - discount).to_s
+    logger.debug("the TOTAL AMOUNT IS : #{@total}")
   end
 
   private
@@ -199,7 +230,7 @@ class OrdersController < EntitiesController
   alias_method :get_orders, :get_list_of_records
 
   def orders_params
-    params.require(:order).permit(:user_id, :status, :state_of_incorporate,
+    params.require(:order).permit(:user_id, :status, :state_of_incorporate, :request_type, :name,
                                   leads_attributes: [:user_id, :first_name, :last_name, :email, :phone, :blog, :source],
                                   opportunities_attributes: [:user_id, :stage, :amount, :discount],
                                   order_files_attributes: [:file_name, :attachment]

@@ -18,9 +18,18 @@
     %table
       %tr
         %td
-          .label #{t :amount} #{t :currency}:
-          = o.text_field :amount,:required => true, :style => "width:110px; text-align:right;"
+          .label.req #{t :amount} #{t :currency}:
+          = o.text_field :amount, :class => "opportunity_amount",:required => true, :style => "width:110px; text-align:right;"
         %td= spacer
         %td
+          .label #{t :other_amount} #{t :currency}:
+          = o.text_field :other_amount, :class => "opportunity_amount", :style => "width:110px; text-align:right;"
+        %td
           .label #{t :discount} #{t :currency}:
-          = o.text_field :discount, :style => "width:110px; text-align:right;"
+          = o.text_field :discount, :class => "opportunity_amount", :style => "width:110px; text-align:right;"
+
+    %table
+      %tr
+        %td
+          .label #{t :total} #{t :currency}:
+          = o.text_field :total_amount, :style => "width:110px; text-align:right;"

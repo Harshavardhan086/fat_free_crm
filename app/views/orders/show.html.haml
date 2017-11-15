@@ -13,7 +13,7 @@
 
   = hook(:show_order_bottom, self, {entity: @order}) do
 
-    = render :partial => "tasks/tasks", :locals => {:object => @order}
+    -#= render :partial => "tasks/tasks", :locals => {:object => @order}
 
     = render :partial => "versions/versions", :locals => {:object => @order}
 
