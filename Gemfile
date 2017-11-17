@@ -93,3 +93,5 @@ gem 'rmagick'
 gem 'remotipart', '~> 1.2'
 gem "cocoon"
 gem 'jquery-datatables-rails', '~> 3.4.0'
+#Whenever is a Ruby gem that provides a clear syntax for writing and deploying cron jobs.
+gem 'whenever', :require => false
