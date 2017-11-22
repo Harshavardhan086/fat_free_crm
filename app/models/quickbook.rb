@@ -274,6 +274,7 @@ class Quickbook < ApplicationRecord
   def self.post_invoice_to_quickbooks(order, account)
     amount = order.opportunity.amount
     discount = order.opportunity.discount
+    other_amount = order.opportunity.other_amount
     logger.debug("post_invoice_to_quickbooks----AMOUNT : #{amount.inspect}******DISCOUNT : #{discount.inspect}")
     invoice = {
         "Line": [
@@ -285,6 +286,15 @@ class Quickbook < ApplicationRecord
                   {
                     "Qty": 1
                   }
+            },
+            {
+                "Amount": other_amount,
+                "DetailType": "SalesItemLineDetail",
+                "Description": "Miscellaneous",
+                "SalesItemLineDetail":
+                    {
+                        "Qty": 1
+                    }
             },
             {
               "Amount":discount,
