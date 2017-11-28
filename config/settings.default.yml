@@ -228,11 +228,11 @@
 #  :url:
 #    :controller: leads
 
-- :active: false
-  :text: :tab_contacts
-  :icon: :fa-user
-  :url:
-    :controller: contacts
+#- :active: false
+#  :text: :tab_contacts
+#  :icon: :fa-user
+#  :url:
+#    :controller: contacts
 #- :active: false
 #  :text: :tab_opportunities
 #  :icon: :fa-money

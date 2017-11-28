@@ -24,5 +24,18 @@ class AccountContact < ActiveRecord::Base
 
   validates_presence_of :account_id
 
+  def self.create_for_order(account,contact)
+    account_contact = AccountContact.where("account_id = ? AND contact_id = ?",account.id,contact.id)
+    if account_contact.blank?
+      ac = AccountContact.new
+    else
+      ac = account_contact[0]
+    end
+
+    ac.account_id = account.id
+    ac.contact_id = contact.id
+    ac.save
+  end
+
   ActiveSupport.run_load_hooks(:fat_free_crm_account_contact, self)
 end
