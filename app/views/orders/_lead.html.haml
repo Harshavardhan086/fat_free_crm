@@ -33,6 +33,6 @@
       %tr
         %td
           .label #{t :source}:
-          = l.select :source, Setting.unroll(:lead_source), { :selected => (@lead.source || "other").to_sym }, { :style => "width:160px" }
+          = l.select :source, @referral_sources, { :selected => (@lead.source || "other").to_sym, :include_blank => true }, { :style => "width:160px" }
 
   -#= render "account_address", :f => l

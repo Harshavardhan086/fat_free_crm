@@ -24,7 +24,12 @@
         %td
           .label.req Request Type
           = f.select :request_type, Setting.unroll(:order_request_type), {:selected => (@order.request_type || ""), :include_blank => true}, {class: "business_rule_filter",:required => true, :style => "width:160px" }
-
+  .section
+    %table
+      %tr
+        %td
+          .label.req #{t :assign_to}:
+          = f.select :assigned_to, @sales_managers, {:selected => (@order.assigned_to || "Unassigned")}, {:required => true, :style => "width:160px" }
   = render "orders/opportunity"
   -#%h3 Add Files
   -##attachments

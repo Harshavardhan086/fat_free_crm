@@ -100,12 +100,22 @@ class Quickbook < ApplicationRecord
   def self.update_invoice(account, order)
     amount = order.opportunity.amount
     discount = order.opportunity.discount
+    other_amount = order.opportunity.other_amount
     invoice = {
         "Line": [
             {
                 "Amount": amount,
                 "DetailType": "SalesItemLineDetail",
                 "Description": "Law Services",
+                "SalesItemLineDetail":
+                    {
+                        "Qty": 1
+                    }
+            },
+            {
+                "Amount": other_amount,
+                "DetailType": "SalesItemLineDetail",
+                "Description": "Miscellaneous",
                 "SalesItemLineDetail":
                     {
                         "Qty": 1
@@ -178,17 +188,17 @@ class Quickbook < ApplicationRecord
 
   def self.renew_oauth2_tokens
 
-    if (qbo_accounts = Quickbook.where('reconnect_token_at <= NOW() AND token_expires_at >= NOW()')).empty?
-      p "OAUTH2_RENEW_TOKEN: nothing to do"
-    else
-    # qbo_accounts = Quickbook.where("id = ?", 1)
+    # if (qbo_accounts = Quickbook.where('reconnect_token_at <= NOW() AND token_expires_at >= NOW()')).empty?
+    #   p "OAUTH2_RENEW_TOKEN: nothing to do"
+    # else
+    qbo_accounts = Quickbook.where("id = ?", 1)
       qbo_accounts.each do |q|
         begin
           client = oauth2_client
           client.refresh_token = q.refresh_token
           if resp = client.access_token!
-            duration_attrs = { reconnect_token_at: 1.hour.from_now,
-                               token_expires_at: 50.minutes.from_now }
+            duration_attrs = { reconnect_token_at: Time.now + 1.hour,
+                               token_expires_at: Time.now + 50.minutes }
             attrs = { access_token: resp.access_token, refresh_token: resp.refresh_token }.merge(duration_attrs)
             if q.update(attrs)
               p "SUCCESS_OAUTH2_RENEW_TOKEN: qbo_account: #{q.id}"
@@ -200,7 +210,7 @@ class Quickbook < ApplicationRecord
           p "FAILED_OAUTH2_RENEW_TOKEN: qbo_account: #{q.id} error_message: #{e.message}"
         end
       end
-    end
+    # end
   end
 
 
@@ -274,7 +284,7 @@ class Quickbook < ApplicationRecord
   def self.post_invoice_to_quickbooks(order, account)
     amount = order.opportunity.amount
     discount = order.opportunity.discount
-    other_amount = order.opportunity.other_amount
+    other_amount = order.opportunity.other_amount ? order.opportunity.other_amount : 0
     logger.debug("post_invoice_to_quickbooks----AMOUNT : #{amount.inspect}******DISCOUNT : #{discount.inspect}")
     invoice = {
         "Line": [

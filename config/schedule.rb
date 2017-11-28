@@ -25,7 +25,7 @@ require File.expand_path(File.dirname(__FILE__) + "/environment")
 set :output, "./log/renew_aouth_cron.log"
 set :environment, "development"
 
-every 1.minutes do
+every 30.minutes do
   Rails.logger.debug( "RENEWING Oauth token")
   runner "Quickbook.renew_oauth2_tokens"
 end

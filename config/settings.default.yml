@@ -228,11 +228,11 @@
 #  :url:
 #    :controller: leads
 
-#- :active: false
-#  :text: :tab_contacts
-#  :icon: :fa-user
-#  :url:
-#    :controller: contacts
+- :active: false
+  :text: :tab_contacts
+  :icon: :fa-user
+  :url:
+    :controller: contacts
 #- :active: false
 #  :text: :tab_opportunities
 #  :icon: :fa-money
@@ -276,6 +276,11 @@
   :icon: :fa-list-alt
   :url:
     :controller: admin/business_rules
+- :active: false
+  :text: :admin_dropdown_options
+  :icon: :fa-list-alt
+  :url:
+    :controller: admin/dropdown_options
 
 
 #- :active: false

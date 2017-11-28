@@ -110,6 +110,7 @@ class Admin::UsersController < Admin::ApplicationController
 
     params[:user].permit(
       :admin,
+      :sales_manager,
       :username,
       :email,
       :first_name,

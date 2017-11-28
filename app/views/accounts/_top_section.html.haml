@@ -17,7 +17,10 @@
       -#  %td
       -#    .label #{t :rating}:
       -#    = rating_select "account[rating]", { :id => :account_rating, :selected => @account.rating, :style => "width:160px" }
-
+      %tr
+        %td
+          .label #{t :category}:
+          = f.select :category, @account_category, { :selected => ( @account.category|| "other").to_sym, :include_blank => true }, { :style => "width:160px" }
       - if Setting.background_info && Setting.background_info.include?(:account)
         %tr
           %td(colspan="5")

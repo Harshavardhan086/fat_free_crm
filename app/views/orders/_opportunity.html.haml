@@ -9,11 +9,11 @@
   .section
     %small
       -##{t(:create_opp_for_contact)}
-    %table
-      %tr
-        %td
-          .label #{t :stage}:
-          = o.select :stage, Setting.unroll(:opportunity_stage), { :selected => @opportunity.stage ? @opportunity.stage.to_sym : nil }, { :style => "width:160px" }
+    -#%table
+    -#  %tr
+    -#    %td
+    -#      .label #{t :stage}:
+    -#      = o.select :stage, Setting.unroll(:opportunity_stage), { :selected => @opportunity.stage ? @opportunity.stage.to_sym : nil }, { :style => "width:160px" }
 
     %table
       %tr

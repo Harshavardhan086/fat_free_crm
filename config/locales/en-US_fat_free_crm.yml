@@ -496,6 +496,10 @@ en-US:
 
   create_business_rule: Create Business Rule
   save_business_rule: Save Business Rule
+
+  create_referral_source: Create Referral Source
+  source: Source
+  create_account_category: Create Account Category
   # Views -> Opportunities.
   #----------------------------------------------------------------------------
   amount: Amount
@@ -762,6 +766,7 @@ en-US:
   user_awaits_approval: awaits your approval
   user_confirm_delete: A user can only be deleted if no related assets are left behind.
   user_is_admin: The user is Administrator
+  user_is_sales_manager: The user is Sales Manager
   user_never_logged_in: hasn't logged in yet
   user_signed_up: Signed Up
   user_signed_up_on: signed up on %{value}

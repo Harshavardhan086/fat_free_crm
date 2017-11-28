@@ -27,6 +27,6 @@
       - else
         = t(:added_ago, :value => timeago(account.created_at)).html_safe << " | "
       = t('pluralize.contact', account.contacts.count) << " | "
-      = t('pluralize.opportunity', account.opportunities.count)
+      -#= t('pluralize.opportunity', account.opportunities.count)
 
     = hook(:account_bottom, self, :account => account)

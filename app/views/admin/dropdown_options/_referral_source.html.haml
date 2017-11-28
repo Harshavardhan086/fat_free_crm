@@ -1,0 +1,10 @@
+%table#referral_sources(class="table table-bordered " )
+  %tbody
+    %tr
+      %th Name
+    - @referral_sources.each do |r|
+      %tr{:id => "referral_source_#{r.id}"}
+        %td
+          = r.name
+
+= link_to_inline(:create_referral_source, new_admin_dropdown_option_path, :text => t(:create_referral_source))

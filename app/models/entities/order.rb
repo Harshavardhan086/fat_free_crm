@@ -52,8 +52,9 @@ class Order < ActiveRecord::Base
     opportunity = Opportunity.create_for_order( opportunity_params, task_params)
     lead = Lead.create_for_order(lead_params)
     account = Account.account_create_for_order(account_params, lead)
-    Rails.logger.debug("The SAVED LEAD IS ************* #{lead.inspect}")
-    contact = Contact.create_for_order(lead)
+    Rails.logger.debug("The SAVED LEAD IS ************* #{lead.inspect}**********#{lead_params[:id]}")
+
+    contact = Contact.create_for_order(lead,lead_params[:id])
 
     [account, opportunity, contact, lead]
   end

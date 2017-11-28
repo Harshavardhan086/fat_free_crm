@@ -1,0 +1,2 @@
+class AccountCategory < ApplicationRecord
+end

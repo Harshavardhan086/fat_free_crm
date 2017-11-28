@@ -8,6 +8,15 @@
   #account_contact{ }
     %table
       %tr
+        %td
+          .label First Name
+          = f.text_field :first_name
+        %td= spacer
+        %td
+          .label Last Name
+          = f.text_field :last_name
+
+      %tr
         %td{ :colspan => 3 }
           %table{ :width => "100%", :cellpadding => 0, :cellspacing => 0 }
             %tr

@@ -1,0 +1,9 @@
+crm.flip_form('create_account_category');
+
+- unless params[:cancel].true?
+  $('#create_account_category').html('#{ j render(:partial => "new_account_category") }');
+  $('#empty').html('');
+  crm.set_title('create_account_category', '#{t(:create_account_category)}');
+
+- else
+  crm.set_title('create_group', '#{t(:business_rule)}');

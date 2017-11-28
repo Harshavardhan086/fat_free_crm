@@ -6,7 +6,7 @@
       %span#welcome_username= current_user.name
       %span> !&nbsp;&nbsp;
 
-      = link_to(t(:quick_find), "#", :id => "jumper") << " |"
+      -#= link_to(t(:quick_find), "#", :id => "jumper") << " |"
       = link_to(t(:profile), profile_path) << " |"
       - if current_user.admin?
         = link_to(t(:admin), admin_path) << " |"

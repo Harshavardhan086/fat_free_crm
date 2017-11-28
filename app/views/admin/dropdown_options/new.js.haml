@@ -1,0 +1,9 @@
+crm.flip_form('create_referral_source');
+
+- unless params[:cancel].true?
+  $('#create_referral_source').html('#{ j render(:partial => "new_referral_source") }');
+  $('#empty').html('');
+  crm.set_title('create_referral_source', '#{t(:create_referral_source)}');
+
+- else
+  crm.set_title('create_group', '#{t(:business_rule)}');

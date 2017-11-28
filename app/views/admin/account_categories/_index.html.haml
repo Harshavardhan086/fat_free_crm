@@ -1,0 +1,9 @@
+%table#account_categories
+  %tbody
+    %tr
+      %th Name
+    - @account_categories.each do |ac|
+      %tr{:id => "account_category_#{ac.id}"}
+        %td
+          = ac.name
+= link_to_inline(:create_account_category, new_admin_account_category_path, :text => t(:create_account_category))

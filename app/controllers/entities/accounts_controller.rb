@@ -31,6 +31,7 @@ class AccountsController < EntitiesController
   #----------------------------------------------------------------------------
   def new
     @account.attributes = { user: current_user, access: Setting.default_access, assigned_to: nil }
+    @account_category = AccountCategory.all.collect{|ac| ac.name}
 
     if params[:related]
       model, id = params[:related].split('_')
@@ -43,6 +44,7 @@ class AccountsController < EntitiesController
   # GET /accounts/1/edit                                                   AJAX
   #----------------------------------------------------------------------------
   def edit
+    @account_category = AccountCategory.all.collect{|ac| ac.name}
     if params[:previous].to_s =~ /(\d+)\z/
       @previous = Account.my.find_by_id(Regexp.last_match[1]) || Regexp.last_match[1].to_i
     end
@@ -62,6 +64,8 @@ class AccountsController < EntitiesController
           @order = Order.new
           @create_order = true
           @us_states = helpers.us_states
+          @referral_sources = ReferralSource.all.collect{|rs| rs.name}
+          @sales_managers = User.where(sales_manager: true).collect{|u| [u.full_name, u.id]}
 
           @lead = Lead.new(user: current_user,access: Setting.default_access)
           @opportunity = Opportunity.new(user: current_user)
@@ -83,11 +87,13 @@ class AccountsController < EntitiesController
   # PUT /accounts/1
   #----------------------------------------------------------------------------
   def update
-
+    @account_category = AccountCategory.all.collect{|ac| ac.name}
     if params[:commit] == "Save and Order"
       @order = Order.new
       @create_order = true
       @us_states = helpers.us_states
+      @referral_sources = ReferralSource.all.collect{|rs| rs.name}
+      @sales_managers = User.where(sales_manager: true).collect{|u| [u.full_name, u.id]}
 
       @lead = Lead.new(user: current_user,access: Setting.default_access)
       @opportunity = Opportunity.new(user: current_user)

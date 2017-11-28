@@ -35,8 +35,8 @@ class Admin::SettingsController < Admin::ApplicationController
         q.realmId=params[:realmId]
         q.refresh_token = resp.refresh_token
         q.access_token = resp.access_token
-        q.token_expires_at = 1.hour.from_now
-        q.reconnect_token_at = 50.minutes.from_now
+        q.token_expires_at = Time.now + 1.hour
+        q.reconnect_token_at = Time.now + 50.minutes
         q.save
       end
     end

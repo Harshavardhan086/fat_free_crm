@@ -12,6 +12,8 @@ class OrdersController < EntitiesController
     @task = Task.new(user: current_user)
     @bucket = Setting.unroll(:task_bucket)[1..-1] << [t(:due_specific_date, default: 'On Specific Date...'), :specific_time]
     @category = Setting.unroll(:task_category)
+    @referral_sources = ReferralSource.all.collect{|rs| rs.name}
+    @sales_managers = User.where(sales_manager: true).collect{|u| [u.full_name, u.id]}
   end
 
   def create
@@ -30,6 +32,7 @@ class OrdersController < EntitiesController
     @category = Setting.unroll(:task_category)
     @attachment = OrderFile.new
     @account, @opportunity, @contact, @lead = @order.order_attributes(params.permit!)
+    @referral_sources = ReferralSource.all.collect{|rs| rs.name}
     logger.debug("Saved Lead---- #{@lead.id}")
     logger.debug("Saved opportunity---- #{@opportunity.inspect}")
     logger.debug("Saved account---- #{@account.inspect}")
@@ -42,6 +45,7 @@ class OrdersController < EntitiesController
     @order.name = @account.name
     @order.opportunity_id = @opportunity.id
     @order.account_id = @account.id
+    # @order.assigned_to = params[:assigned_to][:assigned_to]
     if @order.save
       logger.debug("saving the order****************")
      # Task.create_for_order(params[:task],@order)
@@ -76,6 +80,8 @@ class OrdersController < EntitiesController
     @order.name = @account.name
     @order.opportunity_id = @opportunity.id
     @order.account_id = params[:account_id]
+    @order.assigned_to = params[:order][:assigned_to]
+
 
     if @order.save
       Quickbook.create_quickbooks_invoice(@account, @order)
@@ -102,11 +108,13 @@ class OrdersController < EntitiesController
 
 
   def edit
+    @referral_sources = ReferralSource.all.collect{|rs| rs.name}
     @account = @order.account || Account.new(user: current_user)
     @lead = @order.lead
     @opportunity = @order.opportunity
     @us_states = helpers.us_states
     @attachments = @order.order_files
+    @sales_managers = User.where(sales_manager: true).collect{|u| [u.full_name, u.id]}
     logger.debug("Attached files are #{@attachments.inspect}")
 
     br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", @order.state_of_incorporate.to_s,@order.request_type.to_s)
@@ -132,6 +140,7 @@ class OrdersController < EntitiesController
     @account, @opportunity, @contact, @lead = @order.order_attributes(params.permit!)
     # opportunity.update_attributes(params[:opportunity])
     @order.account_id = @account.id
+    # @order.assigned_to = params[:assigned_to][:assigned_to]
     logger.debug("Orders controller- update******** Order IS: #{@order.opportunity.amount.inspect}")
     if @order.update_attributes(orders_params)
       if @order.qb_invoice_ref.nil?
@@ -230,7 +239,7 @@ class OrdersController < EntitiesController
   alias_method :get_orders, :get_list_of_records
 
   def orders_params
-    params.require(:order).permit(:user_id, :status, :state_of_incorporate, :request_type, :name,
+    params.require(:order).permit(:user_id, :status, :state_of_incorporate,:assigned_to, :request_type, :name,
                                   leads_attributes: [:user_id, :first_name, :last_name, :email, :phone, :blog, :source],
                                   opportunities_attributes: [:user_id, :stage, :amount, :discount],
                                   order_files_attributes: [:file_name, :attachment]
