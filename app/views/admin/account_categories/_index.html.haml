@@ -3,7 +3,12 @@
     %tr
       %th Name
     - @account_categories.each do |ac|
-      %tr{:id => "account_category_#{ac.id}"}
+      %tr{:id => "account_category_#{ac.id}",:class => "highlight"}
         %td
           = ac.name
+        %td= spacer
+        %td= spacer
+        %td= spacer
+        %td
+          = link_to "x", "#",:id => "#{ac.id}",:class=> "remove_account_category"
 = link_to_inline(:create_account_category, new_admin_account_category_path, :text => t(:create_account_category))

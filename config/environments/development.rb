@@ -19,8 +19,9 @@ if defined?(FatFreeCRM::Application)
     config.consider_all_requests_local       = true
     config.action_controller.perform_caching = false
 
-    config.action_mailer.delivery_method = :file
-
+    # config.action_mailer.delivery_method = :file
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.perform_deliveries = true
     # Don't care if the mailer can't send
     config.action_mailer.raise_delivery_errors = false
 
@@ -44,5 +45,13 @@ if defined?(FatFreeCRM::Application)
     # Checks for improperly declared sprockets dependencies.
     # Raises helpful error messages.
     config.assets.raise_runtime_errors = true
+    config.action_mailer.smtp_settings = {
+         address:              'smtp.gmail.com',
+         port:                 587,
+         domain:               'resourcestack.com',
+         user_name:            'timestackrsi@gmail.com',
+         password:           'Sameer1111$',
+         authentication:     :plain
+        }
   end
 end

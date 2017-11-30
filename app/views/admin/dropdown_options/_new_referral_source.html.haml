@@ -1,4 +1,4 @@
-%h3 FORM FOR NEW REFERRAL SOURCE
+%h3 NEW REFERRAL SOURCE
 = form_for([:admin, @referral_source], :html => one_submit_only, :remote => true) do |f|
   = link_to_close new_admin_dropdown_option_path
   = f.error_messages

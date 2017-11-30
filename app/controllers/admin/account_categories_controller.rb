@@ -11,4 +11,11 @@ class Admin::AccountCategoriesController < Admin::ApplicationController
     @account_categories = AccountCategory.all
   end
 
+  def remove
+    logger.debug("Account Categories - remove")
+    account_category = AccountCategory.find(params[:id])
+    account_category.destroy
+    @account_categories = AccountCategory.all
+  end
+
 end

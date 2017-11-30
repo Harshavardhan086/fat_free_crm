@@ -78,13 +78,13 @@
 # - Connection settings for the IMAP account, server and folders.
 #------------------------------------------------------------------------------
 :email_dropbox:
-  :server                     : ""        # IMAP server name.
-  :port                       : ""        # IMAP server port number.
-  :ssl                        : ""        # True for secure IMAP connection, false othewise.
-  :address                    : ""        # Dropbox email address.
-  :user                       : ""        # User to login to the IMAP server.
-  :password                   : ""        # Password to login to the IMAP server.
-  :scan_folder                : ""        # Folder to scan for dropbox messages.
+  :server                     : "imap.gmail.com"        # IMAP server name.
+  :port                       : "993"        # IMAP server port number.
+  :ssl                        : "true"        # True for secure IMAP connection, false othewise.
+  :address                    : "timestackrsi@gmail.com"        # Dropbox email address.
+  :user                       : "timestackrsi@gmail.com"        # User to login to the IMAP server.
+  :password                   : "Sameer1111$"        # Password to login to the IMAP server.
+  :scan_folder                : "Inbox"        # Folder to scan for dropbox messages.
   :attach_to_account          : ""        # Attach emails to contact's account, if any.
                                           # (The rule above also applies to opportunities.)
 #  :address_aliases:                      # Optional: List any aliases that you also want to
@@ -276,8 +276,8 @@
   :icon: :fa-list-alt
   :url:
     :controller: admin/business_rules
-- :active: false
-  :text: :admin_dropdown_options
+- :active: true
+  :text: :admin_tab_dropdown_options
   :icon: :fa-list-alt
   :url:
     :controller: admin/dropdown_options

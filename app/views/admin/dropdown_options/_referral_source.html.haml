@@ -3,8 +3,13 @@
     %tr
       %th Name
     - @referral_sources.each do |r|
-      %tr{:id => "referral_source_#{r.id}"}
+      %tr{:id => "referral_source_#{r.id}", :class => "highlight"}
         %td
           = r.name
+        %td= spacer
+        %td= spacer
+        %td= spacer
+        %td
+          = link_to "x", "#",:id => "#{r.id}",:class=> "remove_referral"
 
 = link_to_inline(:create_referral_source, new_admin_dropdown_option_path, :text => t(:create_referral_source))

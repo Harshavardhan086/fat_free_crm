@@ -35,7 +35,8 @@ Rails.application.routes.draw do
   post '/populate_amount' => "orders#populate_amount"
   post '/populate_total_amount' => "orders#populate_total_amount"
   post '/edit_br' => "admin/business_rules#edit"
-
+  get "/remove_referral" => "admin/referral_sources#remove"
+  get 'remove_account_category' => "admin/account_categories#remove"
   resources :accounts, id: /\d+/ do
     collection do
       get :advanced_search

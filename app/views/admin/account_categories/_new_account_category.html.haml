@@ -1,6 +1,6 @@
-%h3 FORM FOR NEW ACCOUNT CATEGORIES
+%h3 NEW ACCOUNT CATEGORIES
 = form_for([:admin, @account_category], :html => one_submit_only, :remote => true) do |f|
-  = link_to_close new_admin_dropdown_option_path
+  = link_to_close new_admin_account_category_path
   = f.error_messages
   #create_br_error
   -#= render :partial => "top_section", :locals => { :f => f }
@@ -14,4 +14,4 @@
   .buttonbar
     = f.submit "Create Referral Source"
     or
-    = link_to_cancel new_admin_dropdown_option_path
+    = link_to_cancel new_admin_account_category_path

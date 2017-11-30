@@ -30,7 +30,7 @@ class Comment < ActiveRecord::Base
                   ignore: [:state]
 
   before_create :subscribe_mentioned_users
-  after_create :subscribe_user_to_entity, :notify_subscribers
+  after_create :subscribe_user_to_entity, :notify_subscribers, :send_email
 
   def expanded?
     state == "Expanded"
@@ -50,11 +50,25 @@ class Comment < ActiveRecord::Base
 
   # Notify subscribed users when a comment is added, unless user created this comment
   def notify_subscribers
+    Rails.logger.debug("commentModel--------notify subscribers method")
     commentable.subscribed_users.reject { |user_id| user_id == user.id }.each do |subscriber_id|
       if subscriber = User.find_by_id(subscriber_id)
+        Rails.logger.debug("commentModel--------notify subscribers method INSIDE IF : #{subscriber_id}********#{subscriber.inspect}")
         SubscriptionMailer.comment_notification(subscriber, self).deliver_now
       end
     end
+  end
+
+  def send_email
+    logger.debug("Comments Model---- send_email****** #{commentable.inspect}--------#{self.commentable_type}")
+    if self.commentable_type == "Order"
+      logger.debug("#{commentable.lead.email}")
+      email = commentable.lead.email
+    elsif self.commentable_type == "Account"
+      email = commentable.email
+    end
+    SubscriptionMailer.send_email(email, self).deliver_now
+
   end
 
   # If a user is mentioned in the comment body, subscribe them to the entity

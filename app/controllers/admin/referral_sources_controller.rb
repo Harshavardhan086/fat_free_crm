@@ -14,4 +14,12 @@ class Admin::ReferralSourcesController < Admin::ApplicationController
     rfs.save
     @referral_sources = ReferralSource.all
   end
+
+  def remove
+    logger.debug("in the referral source - destroy")
+    referral_source = ReferralSource.find(params[:id])
+    referral_source.destroy
+
+    @referral_sources = ReferralSource.all
+  end
 end
