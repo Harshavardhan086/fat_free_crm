@@ -27,7 +27,7 @@
       %td= spacer
       %td
         .check_box(style="margin-top:6px")
-          = f.check_box(:sales_manager, { :disabled => edit && @user == current_user })
+          = f.check_box(:sales_manager)
           %label{:for => 'user_sales_manager'}
             = t(:user_is_sales_manager)
 

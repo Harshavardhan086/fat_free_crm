@@ -156,6 +156,22 @@ class AccountsController < EntitiesController
     end
   end
 
+  def create_account_order
+    logger.debug("accounts controller -- create_account_order")
+    @account_id = params[:id]
+    @account = Account.find(params[:id])
+    @order = Order.new
+    @us_states = helpers.us_states
+    @referral_sources = ReferralSource.all.collect{|rs| rs.name}
+    @sales_managers = User.where(sales_manager: true).collect{|u| [u.full_name, u.id]}
+
+    @lead = Lead.new(user: current_user,access: Setting.default_access)
+    @opportunity = Opportunity.new(user: current_user)
+    @account = @account
+    @attachment = OrderFile.new
+    @task = Task.new(user: current_user)
+  end
+
   private
 
   #----------------------------------------------------------------------------

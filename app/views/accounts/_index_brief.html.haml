@@ -7,7 +7,7 @@
 
   %ul.tools
     = hook(:account_tools_before, self, :account => account)
-
+    %li= link_to "Create Order", "/create_account_order/#{account.id}", remote: true
     - if can?(:update, account)
       %li= link_to_edit(account)
 
