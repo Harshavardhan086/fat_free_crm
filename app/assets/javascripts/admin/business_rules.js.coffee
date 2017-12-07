@@ -9,4 +9,14 @@ jQuery ($) ->
     return
   )
 
+  $(document).on("click", ".remove_br_attachment",->
+    console.log("IN THE REMOVE ATTACHMENT")
+    attachment_id = $(this).attr("id")
+    console.log("the attachment id is: " + attachment_id)
+    $.post '/remove_br_attachment',
+      attachment_id: attachment_id
+    return
+  )
+
   $('#business_rules').DataTable responsive: true
+

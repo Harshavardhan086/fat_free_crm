@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   get "/remove_referral" => "admin/referral_sources#remove"
   get 'remove_account_category' => "admin/account_categories#remove"
   get "/create_account_order/:id" => "accounts#create_account_order"
+  post "/remove_br_attachment" => "admin/business_rules#remove_br_attachment"
   resources :accounts, id: /\d+/ do
     collection do
       get :advanced_search

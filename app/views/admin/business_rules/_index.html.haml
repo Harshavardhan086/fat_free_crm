@@ -18,7 +18,7 @@
         %td
           - if !br.business_rule_files.blank?
             - br.business_rule_files.each do |brf|
-              = brf.file_name
+              = brf.file_name << ","
         %td
           - if br.web.present?
             = br.web

@@ -59,6 +59,12 @@ class Admin::BusinessRulesController < Admin::ApplicationController
     @all_business_rules = BusinessRule.all.order(:state_of_incorporate)
   end
 
+  def remove_br_attachment
+    logger.debug("br controller------ remove_br_attachment")
+    @attachment_id = params[:attachment_id]
+    BusinessRuleFile.destroy(@attachment_id)
+  end
+
   private
 
   def business_rule_params

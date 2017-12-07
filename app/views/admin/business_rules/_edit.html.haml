@@ -37,7 +37,7 @@
       -@attachments.each do |a|
         .attached_file{:id => "attached_file_#{a.id}"}
           = link_to "#{a.file_name}", a.attachment.url,:id => "#{a.id}", :target => "_blank"
-          = link_to "x", "#",:id => "#{a.id}",:class=> "remove_attachment"
+          = link_to "x", "#",:id => "#{a.id}",:class=> "remove_br_attachment"
           %br
 
     .buttonbar
