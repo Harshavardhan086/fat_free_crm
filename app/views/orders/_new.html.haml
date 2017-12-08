@@ -35,7 +35,7 @@
     = f.fields_for :order_files do |of|
       = render "order_file_fields", :f => of
     .links
-      = link_to_add_association "add" , f, :order_files
+      = link_to_add_association "Add File" , f, :order_files
   #required_files
   .buttonbar
     - if Setting.compound_address

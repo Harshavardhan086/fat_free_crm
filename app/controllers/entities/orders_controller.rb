@@ -14,6 +14,7 @@ class OrdersController < EntitiesController
     @category = Setting.unroll(:task_category)
     @referral_sources = ReferralSource.all.collect{|rs| rs.name}
     @sales_managers = User.where(sales_manager: true).collect{|u| [u.full_name, u.id]}
+    @br_files = BusinessRuleFile.all.collect{|brf| brf.file_name}
   end
 
   def create
@@ -115,6 +116,7 @@ class OrdersController < EntitiesController
     @us_states = helpers.us_states
     @attachments = @order.order_files
     @sales_managers = User.where(sales_manager: true).collect{|u| [u.full_name, u.id]}
+    @br_files = BusinessRuleFile.all.collect{|brf| brf.file_name}
     logger.debug("Attached files are #{@attachments.inspect}")
 
     br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", @order.state_of_incorporate.to_s,@order.request_type.to_s)
@@ -221,7 +223,6 @@ class OrdersController < EntitiesController
     @attachments = br.first.business_rule_files
 
     @web = br.first.web
-
   end
 
   def populate_total_amount
