@@ -32,12 +32,27 @@
       .links
         = link_to_add_association "add" , f, :business_rule_files
 
+    %h3 Additional Fields
+    #additional_fields
+      = f.fields_for :additional_fields do |af|
+        -#=render "additional_field_fields", :f => af
+      .links
+        = link_to_add_association "Add Field" , f, :additional_fields
+
     %h3 Files Added
     - if !@attachments.nil?
       -@attachments.each do |a|
         .attached_file{:id => "attached_file_#{a.id}"}
           = link_to "#{a.file_name}", a.attachment.url,:id => "#{a.id}", :target => "_blank"
           = link_to "x", "#",:id => "#{a.id}",:class=> "remove_br_attachment"
+          %br
+
+    %h3 Fields Added
+    - if !@additional_fields.nil?
+      -@additional_fields.each do |a|
+        .additional_field{:id => "additional_field_#{a.id}"}
+          = link_to "#{a.name}", "#",:remote => true,:id => "#{a.id}", :target => "_blank"
+          = link_to "x", "#",:id => "#{a.id}",:class=> "remove_additional_field"
           %br
 
     .buttonbar

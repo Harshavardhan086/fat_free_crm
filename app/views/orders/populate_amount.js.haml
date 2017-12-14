@@ -8,3 +8,7 @@ $('#opportunity_total_amount').attr("value", '#{j (@amount)}')
 
 - if !@web.blank?
   $('#web').html('#{ j render(:partial => "state_website") }')
+
+
+- if !@additional_fields.blank?
+  $("#additional_field").html('#{j render(:partial => 'additional_fields')}')

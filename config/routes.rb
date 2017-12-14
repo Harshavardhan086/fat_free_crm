@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   get 'remove_account_category' => "admin/account_categories#remove"
   get "/create_account_order/:id" => "accounts#create_account_order"
   post "/remove_br_attachment" => "admin/business_rules#remove_br_attachment"
+  post "/remove_additional_field" => "admin/business_rules#remove_additional_field"
   resources :accounts, id: /\d+/ do
     collection do
       get :advanced_search

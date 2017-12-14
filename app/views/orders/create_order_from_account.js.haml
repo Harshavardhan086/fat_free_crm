@@ -1,7 +1,12 @@
-$('#create_account').slideUp(250);
+-if @not_equal == "true"
 
-$('#account_#{@account.id}').slideUp(250);
+  $('#account_#{@account.id}').effect("shake", { duration:250, distance: 6 });
+  $('#display_error').html("Please add all the required files.")
+-else
+  $('#create_account').slideUp(250);
 
-$('#account_#{@account.id}').replaceWith('#{ j render(:partial => 'accounts/account', :collection => [ @account]) }');
+  $('#account_#{@account.id}').slideUp(250);
 
-$("#edit_account").slideUp(250)
+  $('#account_#{@account.id}').replaceWith('#{ j render(:partial => 'accounts/account', :collection => [ @account]) }');
+
+  $("#edit_account").slideUp(250)

@@ -72,6 +72,7 @@ class AccountsController < EntitiesController
           @account = @account
           @attachment = OrderFile.new
           @task = Task.new(user: current_user)
+          @br_files = BusinessRuleFile.all.collect{|brf| brf.file_name}
         end
         # None: account can only be created from the Accounts index page, so we
         # don't have to check whether we're on the index page.
@@ -170,6 +171,7 @@ class AccountsController < EntitiesController
     @account = @account
     @attachment = OrderFile.new
     @task = Task.new(user: current_user)
+    @br_files = BusinessRuleFile.all.collect{|brf| brf.file_name}
   end
 
   private

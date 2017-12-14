@@ -18,5 +18,12 @@ jQuery ($) ->
     return
   )
 
+  $(document).on("click", ".remove_additional_field",->
+    console.log("IN REMOVE ADDIDIONAL FIELDS")
+    additional_field_id = $(this).attr("id")
+    $.post "/remove_additional_field",
+      field_id: additional_field_id
+    return
+  )
   $('#business_rules').DataTable responsive: true
 

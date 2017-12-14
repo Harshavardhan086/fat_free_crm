@@ -47,20 +47,75 @@ class OrdersController < EntitiesController
     @order.opportunity_id = @opportunity.id
     @order.account_id = @account.id
     # @order.assigned_to = params[:assigned_to][:assigned_to]
-    if @order.save
-      logger.debug("saving the order****************")
-     # Task.create_for_order(params[:task],@order)
-      Quickbook.create_quickbooks_invoice(@account, @order)
-    else
-      logger.debug("NOT SAVING THE ORDER************")
-      @task = Task.new
-    end
+    @comment_body = params[:comment_body]
+    br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", params[:order][:state_of_incorporate],params[:order][:request_type])
+    additional_field = br.first.additional_fields.collect{|field| field.name}
 
-    respond_with(@order) do |_format|
-      if called_from_index_page?
-        @orders = get_orders
+    if !additional_field.blank?
+      additional_field_hash = {}
+      additional_field.each do |afn|
+        additional_field_hash[:"#{afn}"] = params[:"#{afn}"]
       end
     end
+
+    @order.additional_field = additional_field_hash
+
+    br_files = br.first.business_rule_files.collect{|brf| brf.file_name}
+
+    files_attached_to_order = []
+    logger.debug("BEFORE order_files_attributes***************")
+    if params[:order][:order_files_attributes]
+      logger.debug("In the order_files_attributes***************")
+      params[:order][:order_files_attributes].each do |k, v|
+        files_attached_to_order << v[:file_name]
+      end
+    end
+
+    if params[:order][:status] != "new"
+      # if files_attached_to_order.sort == br_files.sort
+      if (br_files-files_attached_to_order).empty?
+        if @order.save
+          @order.add_comment_by_user(@comment_body, current_user)
+          logger.debug("saving the order************* ORDER STATUS IS: #{@order.status}")
+          if @order.status != "new"
+            # Task.create_for_order(params[:task],@order)
+            Quickbook.create_quickbooks_invoice(@account, @order)
+          end
+        else
+          logger.debug("NOT SAVING THE ORDER************")
+          @task = Task.new
+        end
+
+        respond_with(@order) do |_format|
+          if called_from_index_page?
+            @orders = get_orders
+          end
+        end
+      else
+        logger.debug("Orders Controller-- create--in NOT EQUAL********************")
+        @not_equal = "true"
+        # @order.save
+      end
+    else
+      if @order.save
+        @order.add_comment_by_user(@comment_body, current_user)
+        logger.debug("saving the order************* ORDER STATUS IS: #{@order.status}")
+        if @order.status != "new"
+          # Task.create_for_order(params[:task],@order)
+          Quickbook.create_quickbooks_invoice(@account, @order)
+        end
+      else
+        logger.debug("NOT SAVING THE ORDER************")
+        @task = Task.new
+      end
+
+      respond_with(@order) do |_format|
+        if called_from_index_page?
+          @orders = get_orders
+        end
+      end
+    end
+
   end
 
 
@@ -83,10 +138,56 @@ class OrdersController < EntitiesController
     @order.account_id = params[:account_id]
     @order.assigned_to = params[:order][:assigned_to]
 
+    br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", params[:order][:state_of_incorporate],params[:order][:request_type])
+    additional_field = br.first.additional_fields.collect{|field| field.name}
 
-    if @order.save
-      Quickbook.create_quickbooks_invoice(@account, @order)
+    if !additional_field.blank?
+      additional_field_hash = {}
+      additional_field.each do |afn|
+        additional_field_hash[:"#{afn}"] = params[:"#{afn}"]
+      end
     end
+    @order.additional_field = additional_field_hash
+    @comment_body = params[:comment_body]
+
+
+
+
+    br_files = br.first.business_rule_files.collect{|brf| brf.file_name}
+
+    files_attached_to_order = []
+    logger.debug("BEFORE order_files_attributes***************")
+    if params[:order][:order_files_attributes]
+      logger.debug("In the order_files_attributes***************")
+      params[:order][:order_files_attributes].each do |k, v|
+        files_attached_to_order << v[:file_name]
+      end
+    end
+
+
+    if params[:order][:status] != "new"
+      # if files_attached_to_order.sort == br_files.sort
+      if (br_files-files_attached_to_order).empty?
+        if @order.save
+          @order.add_comment_by_user(@comment_body, current_user)
+          if @order.status != "new"
+            Quickbook.create_quickbooks_invoice(@account, @order)
+          end
+        end
+      else
+        logger.debug(" Orders controller--create_order_from_account-- in NOT EQUAL********************")
+        @not_equal = "true"
+        # @order.save
+      end
+    else
+      if @order.save
+        @order.add_comment_by_user(@comment_body, current_user)
+        if @order.status != "new"
+          Quickbook.create_quickbooks_invoice(@account, @order)
+        end
+      end
+    end
+
 
     # respond_with(@account) do |_format|
     #   # @accounts = get_accounts
@@ -136,6 +237,11 @@ class OrdersController < EntitiesController
   end
 
   def update
+    @referral_sources = ReferralSource.all.collect{|rs| rs.name}
+    @us_states = helpers.us_states
+    @sales_managers = User.where(sales_manager: true).collect{|u| [u.full_name, u.id]}
+    @br_files = BusinessRuleFile.all.collect{|brf| brf.file_name}
+    @attachments = @order.order_files
     logger.debug("Orders Controller- update****************** : #{params.inspect}")
     logger.debug("Orders controller- update******** Lead : #{params[:lead].inspect}")
     # logger.debug("Orders controller- update******** opportunity : #{params[:opportunity].inspect}")
@@ -143,15 +249,74 @@ class OrdersController < EntitiesController
     # opportunity.update_attributes(params[:opportunity])
     @order.account_id = @account.id
     # @order.assigned_to = params[:assigned_to][:assigned_to]
-    logger.debug("Orders controller- update******** Order IS: #{@order.opportunity.amount.inspect}")
-    if @order.update_attributes(orders_params)
-      if @order.qb_invoice_ref.nil?
-        Quickbook.create_quickbooks_invoice(@account, @order)
-      else
-        Quickbook.update_invoice( @account,@order)
+    br = BusinessRule.where("state_of_incorporate = ? AND request_type = ?", params[:order][:state_of_incorporate],params[:order][:request_type])
+
+    @br_web = br.first.web if !br.blank?
+    @br_attachments = br.first.business_rule_files if !br.blank?
+    additional_field = br.first.additional_fields.collect{|field| field.name}
+
+    if !additional_field.blank?
+      additional_field_hash = {}
+      additional_field.each do |afn|
+        additional_field_hash[:"#{afn}"] = params[:"#{afn}"]
       end
-      respond_with(@order)
     end
+    @order.additional_field = additional_field_hash
+    @comment_body = params[:comment_body]
+    logger.debug("Orders controller- update******** Order IS: #{@order.opportunity.amount.inspect}******* BR HASH: #{additional_field_hash.inspect}")
+
+    br_files = br.first.business_rule_files.collect{|brf| brf.file_name}
+
+    files_attached_to_order = []
+    logger.debug("BEFORE order_files_attributes***************")
+    if params[:order][:order_files_attributes]
+      logger.debug("In the order_files_attributes***************")
+      params[:order][:order_files_attributes].each do |k, v|
+        files_attached_to_order << v[:file_name]
+      end
+    end
+    files_attached = @order.order_files.collect{|f| f.file_name}
+
+    all_order_attachment = files_attached_to_order + files_attached
+
+    logger.debug("ALL the order attachment are************************* : #{all_order_attachment}========== BR File NAMES : #{br_files}
+                        --------diffrence is : #{(br_files-all_order_attachment).empty?}")
+
+    if params[:order][:status] != "new"
+      # if all_order_attachment.sort == br_files.sort
+      if (br_files-all_order_attachment).empty?
+        if @order.update_attributes(orders_params)
+          @order.add_comment_by_user(@comment_body, current_user)
+          if @order.status != "new"
+            if @order.qb_invoice_ref.nil?
+              Quickbook.create_quickbooks_invoice(@account, @order)
+            else
+              Quickbook.update_invoice( @account,@order)
+            end
+          end
+          respond_with(@order)
+        end
+      else
+        # raise "Upload all the required documents."
+        # @order.errors[:not_equal]
+        logger.debug("Orders Controller-- update-- in NOT EQUAL********************")
+        @not_equal = "true"
+        @order.update_attributes(orders_params)
+      end
+    else
+      if @order.update_attributes(orders_params)
+        @order.add_comment_by_user(@comment_body, current_user)
+        if @order.status != "new"
+          if @order.qb_invoice_ref.nil?
+            Quickbook.create_quickbooks_invoice(@account, @order)
+          else
+            Quickbook.update_invoice( @account,@order)
+          end
+        end
+        respond_with(@order)
+      end
+    end
+
 
   end
 
@@ -221,7 +386,7 @@ class OrdersController < EntitiesController
                           AND Web is : #{br.first.web.blank?}")
 
     @attachments = br.first.business_rule_files
-
+    @additional_fields = br.first.additional_fields
     @web = br.first.web
   end
 
@@ -240,7 +405,7 @@ class OrdersController < EntitiesController
   alias_method :get_orders, :get_list_of_records
 
   def orders_params
-    params.require(:order).permit(:user_id, :status, :state_of_incorporate,:assigned_to, :request_type, :name,
+    params.require(:order).permit(:user_id, :status, :state_of_incorporate,:assigned_to, :request_type, :name, :additional_field,
                                   leads_attributes: [:user_id, :first_name, :last_name, :email, :phone, :blog, :source],
                                   opportunities_attributes: [:user_id, :stage, :amount, :discount],
                                   order_files_attributes: [:file_name, :attachment]

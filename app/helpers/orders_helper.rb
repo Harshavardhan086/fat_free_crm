@@ -2,10 +2,10 @@ module OrdersHelper
 
   def us_states
     [
-        ['Alabama', 'AL'],
-        ['Alaska', 'AK'],
-        ['Arizona', 'AZ'],
-        ['Arkansas', 'AR'],
+        ['Alabama', 'Alabama'],
+        ['Alaska', 'Alaska'],
+        ['Arizona', 'Arizona'],
+        ['Arkansas', 'Arkansas'],
         ['California', 'CA'],
         ['Colorado', 'CO'],
         ['Connecticut', 'CT'],

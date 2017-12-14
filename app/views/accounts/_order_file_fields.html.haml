@@ -1,0 +1,14 @@
+.section
+  %table
+    %tr
+      %td
+        .label File Name
+        - if !@br_files.nil?
+          = f.select :file_name, @br_files, :style => "width:140px;"
+        - else
+          = f.text_field :file_name, :autofocus => true, :style => "width:140px;"
+      %td= spacer
+      %td
+        .label Upload File
+        .action
+          = f.file_field :attachment, :multipart => true

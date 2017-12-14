@@ -10,6 +10,7 @@ class Order < ActiveRecord::Base
 
   accepts_nested_attributes_for :order_files, reject_if: :all_blank, allow_destroy: true
   serialize :subscribed_users, Set
+  serialize :addition_field, Hash
 
   # Show orders which either belong to the user and are unassigned, or are assigned to the user
   scope :visible_on_dashboard, ->(user) {
@@ -37,7 +38,6 @@ class Order < ActiveRecord::Base
   validates_presence_of :account_id, message: :missing_account
   validates_presence_of :lead_id , message: :missing_lead_details
   validates_presence_of :state_of_incorporate , message: :missing_state_of_incorporate
-
 
   def order_attributes(params)
     account_params = params[:account] ? params[:account] : {}

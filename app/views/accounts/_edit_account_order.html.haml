@@ -7,6 +7,7 @@
     = hidden_field_tag :user_id, current_user.id
     = hidden_field_tag :account_id, @account.id
     = f.error_messages :object_name => t('order')
+    #display_error(style="background-color: red;" )
     -#= render "account"
     = render "orders/lead"
 
@@ -32,12 +33,15 @@
             .label.req #{t :assign_to}:
             = f.select :assigned_to, @sales_managers, {:selected => (@order.assigned_to || "Unassigned")}, { :style => "width:160px" }
     = render "orders/opportunity"
+    = render "shared/add_comment", :f => f
+    #additional_field
+
     %h3 Add Files
-    -##attachments
-    -#  = f.fields_for :order_files do |of|
-    -#    = render "account_order_file_fields", :f => of
-    -#  .links
-    -#    = link_to_add_association "add" , f, :order_files
+    #attachments
+      = f.fields_for :order_files do |of|
+        = render "orders/order_file_fields", :f => of
+      .links
+        = link_to_add_association "add" , f, :order_files
     #required_files
     -#= render "task"
     -#%h3 Add Files

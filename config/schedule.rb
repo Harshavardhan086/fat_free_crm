@@ -29,3 +29,8 @@ every 30.minutes do
   Rails.logger.debug( "RENEWING Oauth token")
   runner "Quickbook.renew_oauth2_tokens"
 end
+
+every 1.minute do
+  Rails.logger.debug("Cron for dropbox****")
+  rake "ffcrm:dropbox:run"
+end

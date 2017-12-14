@@ -49,6 +49,7 @@ class Admin::BusinessRulesController < Admin::ApplicationController
     logger.debug("BR CONTROLLER ----- EDIT *************** and the attachment are : #{@business_rule.business_rule_files.inspect}")
     @attachments = @business_rule.business_rule_files
     @us_states = helpers.us_states
+    @additional_fields = @business_rule.additional_fields
   end
 
   def update
@@ -65,11 +66,17 @@ class Admin::BusinessRulesController < Admin::ApplicationController
     BusinessRuleFile.destroy(@attachment_id)
   end
 
+  def remove_additional_field
+    @additional_field_id = params[:field_id]
+    AdditionalField.destroy(@additional_field_id)
+  end
+
   private
 
   def business_rule_params
     params.require(:business_rule).permit(:state_of_incorporate, :amount, :request_type,:web ,
-                                          business_rule_files_attributes: [:file_name, :attachment])
+                                          business_rule_files_attributes: [:file_name, :attachment],
+                                          additional_fields_attributes: [:name])
   end
 
 end

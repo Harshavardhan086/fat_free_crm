@@ -31,6 +31,12 @@
     .links
       = link_to_add_association "add" , f, :business_rule_files
 
+  %h3 Additional Fields
+  #additional_fields
+    = f.fields_for :additional_fields do |af|
+      =render "additional_field_fields", :f => af
+    .links
+      = link_to_add_association "Add Field" , f, :additional_fields
   .buttonbar
     = f.submit t(:create_business_rule)
     or

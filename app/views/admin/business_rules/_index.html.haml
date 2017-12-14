@@ -6,6 +6,7 @@
       %th Request Type
       %th Amount
       %th Documents
+      %th Additional Fields
       %th Website
     - @all_business_rules.each do |br|
       %tr{:id => "business_rule_#{br.id}"}
@@ -19,6 +20,10 @@
           - if !br.business_rule_files.blank?
             - br.business_rule_files.each do |brf|
               = brf.file_name << ","
+        %td
+          - if !br.additional_fields.blank?
+            - br.additional_fields.each do |braf|
+              = braf.name << ","
         %td
           - if br.web.present?
             = br.web
