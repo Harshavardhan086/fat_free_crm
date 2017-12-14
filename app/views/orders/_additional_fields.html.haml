@@ -1,0 +1,4 @@
+.section
+  - @additional_fields.each do |af|
+    .label #{af.name}
+    = text_field_tag af.name
